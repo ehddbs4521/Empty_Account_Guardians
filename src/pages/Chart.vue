@@ -7,7 +7,7 @@
 
     <!-- 오른쪽: 카테고리 리스트 -->
     <div class="list-wrapper">
-      <h2>총 지출 금액 {{ total.toLocaleString() }}</h2>
+      <h2>{{ currentMonthStr }} 총 지출 금액 {{ total.toLocaleString() }}</h2>
       <table>
         <tbody>
           <tr v-for="(label, index) in labels" :key="label">
@@ -39,6 +39,8 @@ const colors = ref([]);
 const percentages = ref([]);
 const amounts = ref([]);
 const total = ref(0);
+const currentMonth = ref(new Date().getMonth() + 1); // JS는 0부터 시작하므로 +1
+const currentMonthStr = ref(`${currentMonth.value}월`);
 
 onMounted(async () => {
   await nextTick();
@@ -50,6 +52,13 @@ onMounted(async () => {
   const categoryMeta = await categoryRes.json();
 
   const expenses = transactions.filter((t) => t.expense_type === '지출');
+  // 월 필터링 코드 -> db.json 수정해야 함. (다 3월로 되어 있음)
+  // const expenses = transactions.filter((t) => {
+  //   const date = new Date(t.date); // t.date는 문자열이라고 가정 (예: "2025-04-07")
+  //   return (
+  //     t.expense_type === '지출' && date.getMonth() + 1 === currentMonth.value
+  //   );
+  // });
 
   const categoryTotals = {};
   expenses.forEach((t) => {
