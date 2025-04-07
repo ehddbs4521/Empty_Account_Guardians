@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/pages/Home.vue';
+import chartView from '@/pages/Chart.vue';
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -16,6 +18,11 @@ const router = createRouter({
     //   // which is lazy-loaded when the route is visited.
     //   component: () => import('../views/AboutView.vue'),
     // },
+    {
+      path: '/chart',
+      name: 'chart',
+      component: chartView,
+    },
   ],
 });
 
