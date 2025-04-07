@@ -1,0 +1,545 @@
+{
+  "paytypes": [
+    {
+      "name": "현금"
+    },
+    {
+      "name": "국민 카드"
+    },
+    {
+      "name": "신한 카드"
+    },
+    {
+      "name": "카카오 카드"
+    },
+    {
+      "name": "카카오 페이"
+    },
+    {
+      "name": "네이버 페이"
+    }
+  ],
+  "categories": [
+    {
+      "name": "월급"
+    },
+    {
+      "name": "식비"
+    },
+    {
+      "name": "교통비"
+    },
+    {
+      "name": "여가비"
+    },
+    {
+      "name": "카페비"
+    },
+    {
+      "name": "통신비"
+    },
+    {
+      "name": "고정지출"
+    },
+    {
+      "name": "용돈"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "paytype": "국민 카드",
+      "category": "월급",
+      "date": "2025-03-01",
+      "description": "월급 개꿀",
+      "amount": 3000000,
+      "expense_type": "수입"
+    },
+    {
+      "id": 2,
+      "paytype": "카카오 페이",
+      "category": "교통비",
+      "date": "2025-03-02",
+      "description": "지하철 요금",
+      "amount": 2500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 3,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-03",
+      "description": "배달 음식",
+      "amount": 11000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 4,
+      "paytype": "카카오 카드",
+      "category": "교통비",
+      "date": "2025-03-03",
+      "description": "버스 요금",
+      "amount": 2500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 5,
+      "paytype": "국민 카드",
+      "category": "교통비",
+      "date": "2025-03-03",
+      "description": "버스 요금",
+      "amount": 1250,
+      "expense_type": "지출"
+    },
+    {
+      "id": 6,
+      "paytype": "신한 카드",
+      "category": "여가비",
+      "date": "2025-03-04",
+      "description": "게임 결제",
+      "amount": 60000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 7,
+      "paytype": "현금",
+      "category": "카페비",
+      "date": "2025-03-04",
+      "description": "디저트 카페",
+      "amount": 6500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 8,
+      "paytype": "네이버 페이",
+      "category": "여가비",
+      "date": "2025-03-04",
+      "description": "넷플릭스 구독",
+      "amount": 110000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 9,
+      "paytype": "신한 카드",
+      "category": "통신비",
+      "date": "2025-03-05",
+      "description": "통신 비용",
+      "amount": 80000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 10,
+      "paytype": "카카오 페이",
+      "category": "카페비",
+      "date": "2025-03-06",
+      "description": "디저트 카페",
+      "amount": 5000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 11,
+      "paytype": "현금",
+      "category": "여가비",
+      "date": "2025-03-06",
+      "description": "콘서트 티켓",
+      "amount": 60000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 12,
+      "paytype": "카카오 카드",
+      "category": "여가비",
+      "date": "2025-03-07",
+      "description": "콘서트 티켓",
+      "amount": 110000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 13,
+      "paytype": "네이버 페이",
+      "category": "고정 지출",
+      "date": "2025-03-08",
+      "description": "유튜브 프리미엄",
+      "amount": 10000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 14,
+      "paytype": "네이버 페이",
+      "category": "식비",
+      "date": "2025-03-08",
+      "description": "마트 장보기",
+      "amount": 10000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 15,
+      "paytype": "네이버 페이",
+      "category": "카페비",
+      "date": "2025-03-08",
+      "description": "카페 아메리카노",
+      "amount": 6000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 16,
+      "paytype": "카카오 카드",
+      "category": "용돈",
+      "date": "2025-03-09",
+      "description": "엄마 사랑해요",
+      "amount": 200000,
+      "expense_type": "수입"
+    },
+    {
+      "id": 17,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-10",
+      "description": "마트 장보기",
+      "amount": 10000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 18,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-10",
+      "description": "편의점 간식",
+      "amount": 16000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 19,
+      "paytype": "신한 카드",
+      "category": "교통비",
+      "date": "2025-03-11",
+      "description": "버스 요금",
+      "amount": 2500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 20,
+      "paytype": "신한 카드",
+      "category": "카페비",
+      "date": "2025-03-11",
+      "description": "카페 아메리카노",
+      "amount": 4000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 21,
+      "paytype": "신한 카드",
+      "category": "식비",
+      "date": "2025-03-12",
+      "description": "편의점 간식",
+      "amount": 20000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 22,
+      "paytype": "현금",
+      "category": "여가비",
+      "date": "2025-03-13",
+      "description": "넷플릭스 구독",
+      "amount": 100000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 23,
+      "paytype": "현금",
+      "category": "여가비",
+      "date": "2025-03-13",
+      "description": "넷플릭스 구독",
+      "amount": 100000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 24,
+      "paytype": "카카오 카드",
+      "category": "카페비",
+      "date": "2025-03-14",
+      "description": "디저트 카페",
+      "amount": 6500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 25,
+      "paytype": "카카오 카드",
+      "category": "카페비",
+      "date": "2025-03-14",
+      "description": "카페 아메리카노",
+      "amount": 6000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 26,
+      "paytype": "카카오 카드",
+      "category": "카페비",
+      "date": "2025-03-14",
+      "description": "카페 아메리카노",
+      "amount": 6500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 27,
+      "paytype": "국민 카드",
+      "category": "식비",
+      "date": "2025-03-15",
+      "description": "마트 장보기",
+      "amount": 19000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 28,
+      "paytype": "카카오 카드",
+      "category": "교통비",
+      "date": "2025-03-15",
+      "description": "지하철 요금",
+      "amount": 2500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 29,
+      "paytype": "카카오 페이",
+      "category": "카페비",
+      "date": "2025-03-15",
+      "description": "카페 아메리카노",
+      "amount": 4000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 30,
+      "paytype": "국민 카드",
+      "category": "여가비",
+      "date": "2025-03-16",
+      "description": "콘서트 티켓",
+      "amount": 40000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 31,
+      "paytype": "신한 카드",
+      "category": "여가비",
+      "date": "2025-03-17",
+      "description": "넷플릭스 구독",
+      "amount": 70000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 32,
+      "paytype": "현금",
+      "category": "식비",
+      "date": "2025-03-17",
+      "description": "점심 식사",
+      "amount": 11000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 33,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-17",
+      "description": "점심 식사",
+      "amount": 19000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 34,
+      "paytype": "카카오 페이",
+      "category": "식비",
+      "date": "2025-03-18",
+      "description": "점심 식사",
+      "amount": 19000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 35,
+      "paytype": "국민 카드",
+      "category": "카페비",
+      "date": "2025-03-18",
+      "description": "카페 아메리카노",
+      "amount": 7000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 36,
+      "paytype": "국민 카드",
+      "category": "여가비",
+      "date": "2025-03-18",
+      "description": "넷플릭스 구독",
+      "amount": 140000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 37,
+      "paytype": "카카오 페이",
+      "category": "여가비",
+      "date": "2025-03-19",
+      "description": "넷플릭스 구독",
+      "amount": 150000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 38,
+      "paytype": "카카오 카드",
+      "category": "여가비",
+      "date": "2025-03-20",
+      "description": "게임 결제",
+      "amount": 140000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 39,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-21",
+      "description": "편의점 간식",
+      "amount": 13000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 40,
+      "paytype": "신한 카드",
+      "category": "교통비",
+      "date": "2025-03-22",
+      "description": "지하철 요금",
+      "amount": 1250,
+      "expense_type": "지출"
+    },
+    {
+      "id": 41,
+      "paytype": "네이버 페이",
+      "category": "여가비",
+      "date": "2025-03-22",
+      "description": "게임 결제",
+      "amount": 70000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 42,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-22",
+      "description": "편의점 간식",
+      "amount": 13000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 43,
+      "paytype": "카카오 카드",
+      "category": "교통비",
+      "date": "2025-03-23",
+      "description": "버스 요금",
+      "amount": 2500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 44,
+      "paytype": "신한 카드",
+      "category": "카페비",
+      "date": "2025-03-24",
+      "description": "디저트 카페",
+      "amount": 3500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 45,
+      "paytype": "카카오 카드",
+      "category": "카페비",
+      "date": "2025-03-25",
+      "description": "디저트 카페",
+      "amount": 6500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 46,
+      "paytype": "카카오 페이",
+      "category": "카페비",
+      "date": "2025-03-26",
+      "description": "스타벅스",
+      "amount": 3000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 47,
+      "paytype": "국민 카드",
+      "category": "식비",
+      "date": "2025-03-27",
+      "description": "배달 음식",
+      "amount": 17000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 48,
+      "paytype": "현금",
+      "category": "식비",
+      "date": "2025-03-27",
+      "description": "마트 장보기",
+      "amount": 15000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 49,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-28",
+      "description": "배달 음식",
+      "amount": 16000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 50,
+      "paytype": "네이버 페이",
+      "category": "식비",
+      "date": "2025-03-28",
+      "description": "점심 식사",
+      "amount": 13000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 51,
+      "paytype": "카카오 카드",
+      "category": "식비",
+      "date": "2025-03-29",
+      "description": "점심 식사",
+      "amount": 11000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 52,
+      "paytype": "국민 카드",
+      "category": "식비",
+      "date": "2025-03-30",
+      "description": "점심 식사",
+      "amount": 13000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 53,
+      "paytype": "국민 카드",
+      "category": "식비",
+      "date": "2025-03-31",
+      "description": "편의점 간식",
+      "amount": 10000,
+      "expense_type": "지출"
+    },
+    {
+      "id": 54,
+      "paytype": "현금",
+      "category": "교통비",
+      "date": "2025-03-31",
+      "description": "지하철 요금",
+      "amount": 2500,
+      "expense_type": "지출"
+    },
+    {
+      "id": 55,
+      "paytype": "현금",
+      "category": "식비",
+      "date": "2025-03-31",
+      "description": "점심 식사",
+      "amount": 11000,
+      "expense_type": "지출"
+    }
+  ]
+}
