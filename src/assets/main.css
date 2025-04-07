@@ -12,7 +12,19 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center; /* 필요에 따라 center, space-around 등으로 조절 */
-  align-items: center;
   padding: 0 16px;
   box-sizing: border-box;
+}
+
+/* 모달 공통 */
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
 }
