@@ -1,0 +1,221 @@
+<template>
+  <div v-show="transactions">
+    <p class="totalcount">전체 내역 {{ totalcount }}건</p>
+    <button @click="changeModal" class="filterbtn mb-3">
+      필터 <i class="fa-solid fa-sliders"></i>
+    </button>
+
+    <teleport to="#modal">
+      <FilterModal v-if="isModal" @close-modal="isModal = false" />
+    </teleport>
+    <div style="display: flex; justify-content: space-between">
+      <button class="filterbtn mb-3">
+        필터 <i class="fa-solid fa-sliders"></i>
+      </button>
+
+      <div>
+        <label class="me-3"
+          ><input
+            type="checkbox"
+            class="income-checkbox"
+            @change="showOnlyIncome"
+          />
+          수입: 50,0000</label
+        >
+        <label><input type="checkbox" /> 지출: 10,0000</label>
+      </div>
+    </div>
+    <div>
+      <select class="form-select">
+        <option>최신순</option>
+        <option>오래된순</option>
+      </select>
+    </div>
+    <table class="table" style="text-align: center">
+      <thead class="table-warning">
+        <tr>
+          <th>분류</th>
+          <th>내용</th>
+          <th>결제 수단</th>
+          <th>비용</th>
+          <th>작성일</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in paginatedTransactions" :key="index">
+          <td>
+            <span class="badge rounded-pill bg-primary">{{
+              item.category
+            }}</span>
+          </td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.paytype }}</td>
+          <td>{{ item.amount.toLocaleString() }} 원</td>
+          <td>{{ item.date }}</td>
+          <td class="option-cell">
+            <i
+              @click="toggleOption(index)"
+              class="fa-solid fa-ellipsis-vertical"
+            ></i>
+            <div v-if="showOptionIndex === index" class="option-popup">
+              <button class="optionbtn">
+                <i class="fa-solid fa-pen-to-square"></i> 수정하기
+              </button>
+
+              <button class="optionbtn">
+                <div><i class="fa-solid fa-trash-can"></i> 삭제하기</div>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+        <i class="fa-solid fa-less-than"></i>
+      </button>
+
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        @click="goToPage(page)"
+        :class="{ active: page === currentPage }"
+      >
+        {{ page }}
+      </button>
+
+      <button
+        @click="goToPage(currentPage + 1)"
+        :disabled="currentPage === totalPages"
+      >
+        <i class="fa-solid fa-greater-than"></i>
+      </button>
+    </div>
+  </div>
+</template>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useTransactionStore } from '@/stores/transaction.js';
+import FilterModal from './FilterModal.vue';
+const store = useTransactionStore();
+
+const isModal = ref(false);
+const showOptionIndex = ref(null);
+
+const transactions = computed(() => store.transactions);
+const totalcount = computed(() => transactions.value.length);
+
+const changeModal = () => {
+  isModal.value = true;
+};
+const toggleOption = (index) => {
+  showOptionIndex.value = index === showOptionIndex.value ? null : index;
+};
+
+onMounted(() => {
+  store.fetchTransactions('2025-04');
+});
+
+// 페이지 네이션
+
+const currentPage = ref(1); // 현재 페이지
+const itemsPerPage = 10; // 페이지 당 항목 수
+
+const totalPages = computed(() => {
+  return Math.ceil(transactions.value.length / itemsPerPage);
+});
+
+const paginatedTransactions = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return transactions.value.slice(start, end);
+});
+
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
+</script>
+<style scoped>
+.option-cell {
+  position: relative;
+}
+
+.option-popup {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #6a6a6a;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  z-index: 10;
+  min-width: 120px;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+i {
+  cursor: pointer;
+}
+.badge {
+  width: 5rem;
+}
+.optionbtn {
+  border: none;
+  background-color: white;
+}
+.totalcount {
+  color: #ffb428;
+  font-size: large;
+  font-weight: bold;
+}
+.filterbtn {
+  border: none;
+
+  border: 2px solid lightgray;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 0.2rem 1rem;
+  font-weight: bold;
+}
+.custom-checkbox {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.incomecheck {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.pagination button {
+  /* border: 1px solid #ccc; */
+  border: none;
+  background-color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.pagination button.active {
+  /* background-color: #fcbf4e; */
+  font-weight: bold;
+  color: blue;
+}
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>
