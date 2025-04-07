@@ -1,5 +1,5 @@
 <template>
-  <div v-show="transactions">
+  <div style="width: 100%" v-show="transactions">
     <p class="totalcount">전체 내역 {{ totalcount }}건</p>
     <button @click="changeModal" class="filterbtn mb-3">
       필터 <i class="fa-solid fa-sliders"></i>
@@ -14,21 +14,42 @@
       </button>
 
       <div>
-        <label class="me-3"
-          ><input
-            type="checkbox"
-            class="income-checkbox"
-            @change="showOnlyIncome"
-          />
-          수입: 50,0000</label
+        <input
+          type="radio"
+          name="optradio"
+          v-model="selectedType"
+          id="income"
+          value="income"
+        />
+        <label class="me-3" for="income">
+          수입: {{ totalincome.toLocaleString() }}</label
         >
-        <label><input type="checkbox" /> 지출: 10,0000</label>
+
+        <input
+          type="radio"
+          name="optradio"
+          v-model="selectedType"
+          id="expense"
+          value="expense"
+        />
+        <label class="form-check-label" for="expense">
+          지출: {{ totalexpenditure.toLocaleString() }}</label
+        >
+
+        <!-- <label class="me-3"
+          ><input type="checkbox" v-model="showIncome" /> 수입:
+          {{ totalincome.toLocaleString() }}</label
+        >
+        <label
+          ><input type="checkbox" v-model="showExpense" /> 지출:
+          {{ totalexpenditure.toLocaleString() }}</label
+        > -->
       </div>
     </div>
-    <div>
-      <select class="form-select">
-        <option>최신순</option>
-        <option>오래된순</option>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem">
+      <select v-model="sortType" style="width: 100px">
+        <option value="desc" selected>최신순</option>
+        <option value="asc">오래된순</option>
       </select>
     </div>
     <table class="table" style="text-align: center">
@@ -51,7 +72,7 @@
           </td>
           <td>{{ item.description }}</td>
           <td>{{ item.paytype }}</td>
-          <td>{{ item.amount.toLocaleString() }} 원</td>
+          <td>{{ item.amount.toLocaleString() }}원</td>
           <td>{{ item.date }}</td>
           <td class="option-cell">
             <i
@@ -107,6 +128,19 @@ const showOptionIndex = ref(null);
 const transactions = computed(() => store.transactions);
 const totalcount = computed(() => transactions.value.length);
 
+const selectedType = ref('all');
+const totalincome = computed(() => {
+  return transactions.value
+    .filter((item) => item.expense_type === '수입')
+    .reduce((sum, item) => sum + item.amount, 0);
+});
+
+const totalexpenditure = computed(() => {
+  return transactions.value
+    .filter((item) => item.expense_type === '지출')
+    .reduce((sum, item) => sum + item.amount, 0);
+});
+const sortType = ref('desc');
 const changeModal = () => {
   isModal.value = true;
 };
@@ -123,14 +157,34 @@ onMounted(() => {
 const currentPage = ref(1); // 현재 페이지
 const itemsPerPage = 10; // 페이지 당 항목 수
 
-const totalPages = computed(() => {
-  return Math.ceil(transactions.value.length / itemsPerPage);
+// 필터링된 트랜잭션 목록
+const filteredTransactions = computed(() => {
+  let list = [...transactions.value];
+
+  if (selectedType.value === 'income') {
+    list = list.filter((item) => item.expense_type === '수입');
+  } else if (selectedType.value === 'expense') {
+    list = list.filter((item) => item.expense_type === '지출');
+  }
+
+  return list;
 });
 
 const paginatedTransactions = computed(() => {
+  let list = [...filteredTransactions.value];
+  if (sortType.value === 'desc') {
+    list.sort((a, b) => new Date(b.date) - new Date(a.date));
+  } else if (sortType.value === 'asc') {
+    list.sort((a, b) => new Date(a.date) - new Date(b.date));
+  }
+
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return transactions.value.slice(start, end);
+  return list.slice(start, end);
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredTransactions.value.length / itemsPerPage);
 });
 
 const goToPage = (page) => {

@@ -13,7 +13,7 @@
           :class="['custom-btn', selected.includes(item) ? 'selected' : '']"
           @click="toggleCategory(item)"
         >
-          {{ item }}
+          {{ item.name }}
           <i
             v-if="selected.includes(item)"
             class="fa-solid fa-circle-check"
@@ -21,12 +21,12 @@
         </button>
         <div style="font-weight: bold">결제수단</div>
         <button
-          v-for="item in paytype"
+          v-for="item in paytypes"
           :key="item"
           :class="['custom-btn', selected.includes(item) ? 'selected' : '']"
           @click="toggleCategory(item)"
         >
-          {{ item }}
+          {{ item.name }}
           <i
             v-if="selected.includes(item)"
             class="fa-solid fa-circle-check"
@@ -37,15 +37,21 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useCategoriesStore } from '@/stores/useCategoriesStore.js';
+import { usePaytypesStore } from '@/stores/usePaytypesStore.js';
+
+const categorystore = useCategoriesStore();
+const categories = computed(() => categorystore.categories);
 const emit = defineEmits(['closeModal']);
-const categories = ['용돈', '식비', '교통', '문화'];
-const selected = ref([]);
-const paytype = ['국민카드', '신한카드', '현금'];
+
 const handleApply = () => {
   emit('closeModal'); // 부모에게 이벤트 발생
 };
 
+const paytypestore = usePaytypesStore();
+const paytypes = computed(() => paytypestore.paytypes);
+const selected = ref([]);
 const toggleCategory = (item) => {
   if (selected.value.includes(item)) {
     selected.value = selected.value.filter((v) => v !== item);
