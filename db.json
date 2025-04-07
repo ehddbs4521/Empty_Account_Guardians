@@ -21,28 +21,36 @@
   ],
   "categories": [
     {
-      "name": "월급"
+      "name": "월급",
+      "color": "#ffc0cb"
     },
     {
-      "name": "식비"
+      "name": "식비",
+      "color": "#a68edc"
     },
     {
-      "name": "교통비"
+      "name": "교통비",
+      "color": "#4d84c4"
     },
     {
-      "name": "여가비"
+      "name": "여가비",
+      "color": "#95ccc1"
     },
     {
-      "name": "카페비"
+      "name": "카페비",
+      "color": "#ffe4e1"
     },
     {
-      "name": "통신비"
+      "name": "통신비",
+      "color": "#d2a3d9"
     },
     {
-      "name": "고정지출"
+      "name": "고정지출",
+      "color": "#87e8dc"
     },
     {
-      "name": "용돈"
+      "name": "용돈",
+      "color": "#4ade80"
     }
   ],
   "transactions": [
@@ -115,7 +123,7 @@
       "category": "여가비",
       "date": "2025-03-04",
       "description": "넷플릭스 구독",
-      "amount": 110000,
+      "amount": 11000,
       "expense_type": "지출"
     },
     {
@@ -241,7 +249,7 @@
       "category": "여가비",
       "date": "2025-03-13",
       "description": "넷플릭스 구독",
-      "amount": 100000,
+      "amount": 10000,
       "expense_type": "지출"
     },
     {
@@ -250,7 +258,7 @@
       "category": "여가비",
       "date": "2025-03-13",
       "description": "넷플릭스 구독",
-      "amount": 100000,
+      "amount": 10000,
       "expense_type": "지출"
     },
     {
@@ -322,7 +330,7 @@
       "category": "여가비",
       "date": "2025-03-17",
       "description": "넷플릭스 구독",
-      "amount": 70000,
+      "amount": 7000,
       "expense_type": "지출"
     },
     {
@@ -367,7 +375,7 @@
       "category": "여가비",
       "date": "2025-03-18",
       "description": "넷플릭스 구독",
-      "amount": 140000,
+      "amount": 14000,
       "expense_type": "지출"
     },
     {
@@ -376,7 +384,7 @@
       "category": "여가비",
       "date": "2025-03-19",
       "description": "넷플릭스 구독",
-      "amount": 150000,
+      "amount": 15000,
       "expense_type": "지출"
     },
     {
@@ -403,7 +411,7 @@
       "category": "교통비",
       "date": "2025-03-22",
       "description": "지하철 요금",
-      "amount": 1250,
+      "amount": 12500,
       "expense_type": "지출"
     },
     {
@@ -430,7 +438,7 @@
       "category": "교통비",
       "date": "2025-03-23",
       "description": "버스 요금",
-      "amount": 2500,
+      "amount": 25000,
       "expense_type": "지출"
     },
     {
