@@ -73,9 +73,14 @@
       <tbody>
         <tr v-for="(item, index) in paginatedTransactions" :key="index">
           <td>
-            <span class="badge rounded-pill bg-primary">{{
-              item.category
-            }}</span>
+            <span
+              class="badge rounded-pill"
+              :style="{
+                backgroundColor: getCategoryColor(item.category),
+                color: 'white',
+              }"
+              >{{ item.category }}</span
+            >
           </td>
           <td>{{ item.description }}</td>
           <td>{{ item.paytype }}</td>
@@ -91,8 +96,11 @@
                 <i class="fa-solid fa-pen-to-square"></i> 수정하기
               </button>
 
-              <button class="optionbtn">
-                <div><i class="fa-solid fa-trash-can"></i> 삭제하기</div>
+              <button class="optionbtn" @click="() => handleDelete(item.id)">
+                <div>
+                  <i class="fa-solid fa-trash-can"></i>
+                  삭제하기
+                </div>
               </button>
             </div>
           </td>
@@ -126,9 +134,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useTransactionStore } from '@/stores/transaction.js';
+import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import FilterModal from './FilterModal.vue';
 const store = useTransactionStore();
-
+const categoryStore = useCategoriesStore();
 const isModal = ref(false);
 const showOptionIndex = ref(null);
 
@@ -157,6 +166,7 @@ const toggleOption = (index) => {
 
 onMounted(() => {
   store.fetchTransactions('2025-04');
+  categoryStore.fetchCategories();
 });
 
 // 페이지 네이션
@@ -230,6 +240,21 @@ const applyFilter = (filterItems) => {
 //필터 제거
 const removeFilter = (filter) => {
   appliedFilters.value = appliedFilters.value.filter((f) => f.id !== filter.id);
+};
+
+//아이템 삭제
+const handleDelete = (id) => {
+  if (confirm('정말 삭제하시겠습니까?')) {
+    store.deleteTransaction(id);
+  }
+};
+
+//카테고리 생상 가져오기
+const getCategoryColor = (categoryName) => {
+  const category = categoryStore.categories.find(
+    (c) => c.name === categoryName
+  );
+  return category ? category.color : '#007bff';
 };
 </script>
 <style scoped>
