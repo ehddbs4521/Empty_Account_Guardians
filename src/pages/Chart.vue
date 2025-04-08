@@ -177,6 +177,14 @@ onMounted(async () => {
   margin: 40px auto;
   display: table;
 }
+.container {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  margin: 40px auto;
+  display: table;
+}
 .layout-wrapper {
   display: flex;
   justify-content: center;
@@ -187,7 +195,6 @@ onMounted(async () => {
   margin: 0 auto; /* 가운데 정렬 */
   box-sizing: border-box;
 }
-
 .pie-chart-wrapper {
   width: 400px;
   height: 400px;
@@ -198,6 +205,17 @@ onMounted(async () => {
 .list-wrapper {
   flex-grow: 1;
   min-width: 300px;
+}
+
+.line-chart-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto; /* 가운데 정렬 */
+  box-sizing: border-box;
 }
 
 .line-chart-wrapper {
