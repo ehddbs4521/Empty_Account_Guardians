@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
+
 export const useTransactionStore = defineStore('transaction', () => {
   const transactions = ref([]);
   const error = ref(null);
@@ -41,21 +42,19 @@ export const useTransactionStore = defineStore('transaction', () => {
         ...newTransaction,
       };
 
-      // 3. POST 요청
-      const response = await fetch('http://localhost:3000/transactions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(transactionWithId),
-      });
+      // 3. POST 요청 (axios 사용)
+      const response = await axios.post(
+        'http://localhost:3000/transactions',
+        transactionWithId,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-      if (response.ok) {
-        const data = await response.json();
-        transactions.value.push(data); // 목록 반영
-      } else {
-        throw new Error('트랜잭션 추가 실패: ' + response.status);
-      }
+      // 4. 성공 시 목록에 반영
+      transactions.value.push(response.data);
     } catch (err) {
       error.value = err.message;
     }

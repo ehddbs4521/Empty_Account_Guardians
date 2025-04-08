@@ -23,6 +23,10 @@
     {
       "name": "네이버 페이",
       "id": "dfad"
+    },
+    {
+      "id": "bb2a",
+      "name": "토스"
     }
   ],
   "categories": [
@@ -65,6 +69,11 @@
       "name": "용돈",
       "color": "#4ade80",
       "id": "4f57"
+    },
+    {
+      "id": "4931",
+      "name": "패스트푸드",
+      "color": "#a635d0"
     }
   ],
   "transactions": [
@@ -426,6 +435,42 @@
       "date": "2025-03-04",
       "description": "아침 식사",
       "amount": 3000,
+      "expense_type": "지출"
+    },
+    {
+      "id": "41",
+      "paytype": "카카오 카드",
+      "category": "교통비",
+      "date": "2025-04-02",
+      "description": "zzzzzzzzzzzzzzzz",
+      "amount": 12300,
+      "expense_type": "지출"
+    },
+    {
+      "id": "42",
+      "paytype": "국민 카드",
+      "category": "교통비",
+      "date": "2025-04-07",
+      "description": "지하철",
+      "amount": 2600,
+      "expense_type": "지출"
+    },
+    {
+      "id": "43",
+      "paytype": "카카오 카드",
+      "category": "여가비",
+      "date": "2025-04-01",
+      "description": "ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ",
+      "amount": 10000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "44",
+      "paytype": "토스",
+      "category": "패스트푸드",
+      "date": "2025-04-02",
+      "description": "햄버거 먹음 ㅋ",
+      "amount": 12000,
       "expense_type": "지출"
     }
   ]
