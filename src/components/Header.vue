@@ -38,10 +38,10 @@
 
       <!-- 오른쪽 -->
       <div class="right">
-        <router-link to="/">
+        <router-link to="/home">
           <i
             class="icon fa-solid fa-list-ul"
-            :class="{ active: $route.path === '/' }"
+            :class="{ active: $route.path === '/home' }"
           ></i>
         </router-link>
         <router-link to="/calendar">
@@ -62,9 +62,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch } from "vue";
 
-import { useDateStore } from '@/stores/date';
+import { useDateStore } from "@/stores/date";
 const dateStore = useDateStore();
 
 const currentDate = ref(new Date());
@@ -83,7 +83,7 @@ const nextMonth = () => {
   currentDate.value = date;
 };
 
-const name = ref('천재개발자');
+const name = ref("천재개발자");
 </script>
 
 <style scoped>
