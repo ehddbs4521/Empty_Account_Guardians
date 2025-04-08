@@ -60,7 +60,7 @@
         </div>
 
         <!-- 결제수단 -->
-        <div class="col">
+        <div class="col" v-if="selectedType === '지출'">
           <label class="form-label fw-semibold mb-3">결제수단</label>
           <select v-model="paymentMethod" class="form-select">
             <option
@@ -103,7 +103,7 @@
     </div>
 
     <!-- AddCategory 모달 or 영역 -->
-    <AddCategory
+    <AddCategoryModal
       v-if="showAddCategory"
       :type="addMode"
       @close="handleCategoryClose"
@@ -113,10 +113,12 @@
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import AddCategory from './AddCategory.vue';
+import AddCategoryModal from './AddCategoryModal.vue';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { usePaytypesStore } from '@/stores/usePaytypesStore';
 import { useTransactionStore } from '@/stores/transaction';
+
+const emit = defineEmits(['incomeGifShow']);
 
 const selectedType = ref('지출');
 const date = ref(new Date().toISOString().slice(0, 10));
@@ -193,6 +195,12 @@ const addTransaction = async () => {
   };
 
   await transactionStore.addTransaction(newTransaction);
+
+  if (selectedType.value === '수입') {
+    emit('incomeGifShow');
+  } else {
+    emit('outcomeGifShow');
+  }
 
   // 초기화 일부
   description.value = '';
