@@ -13,8 +13,12 @@ export const useTransactionStore = defineStore('transaction', () => {
       const response = await fetch(`http://localhost:3000/transactions`);
 
       if (response.ok) {
+        const email = localStorage.getItem("id");
         const data = await response.json();
-        transactions.value = data.filter((t) => t.date.startsWith(month));
+
+        transactions.value = data.filter(
+          (t) => t.date.startsWith(month) && t.email === email
+        );
       } else {
         throw new Error('서버 응답 오류: ' + response.status);
       }
