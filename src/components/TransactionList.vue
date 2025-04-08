@@ -5,13 +5,12 @@
       필터 <i class="fa-solid fa-sliders"></i>
     </button>
 
-    <teleport to="#modal">
-      <FilterModal
-        v-if="isModal"
-        @applyFilter="applyFilter"
-        :appliedFilters="appliedFilters"
-      />
-    </teleport>
+    <FilterModal
+      v-if="isModal"
+      @applyFilter="applyFilter"
+      :appliedFilters="appliedFilters"
+    />
+
     <div style="display: flex; justify-content: flex-start">
       <div class="applyfilter me-1" v-for="filter in appliedFilters">
         <span class="me-1" style="font-weight: bold">{{ filter.name }} </span
@@ -20,37 +19,14 @@
     </div>
     <div style="display: flex; justify-content: flex-end">
       <div class="mb-3">
-        <input
-          type="radio"
-          d
-          name="optradio"
-          v-model="selectedType"
-          id="income"
-          value="income"
-        />
-        <label class="me-3" for="income">
-          수입: {{ totalincome.toLocaleString() }}</label
-        >
-
-        <input
-          type="radio"
-          name="optradio"
-          v-model="selectedType"
-          id="expense"
-          value="expense"
-        />
-        <label class="form-check-label" for="expense">
-          지출: {{ totalexpenditure.toLocaleString() }}</label
-        >
-
-        <!-- <label class="me-3"
-          ><input type="checkbox" v-model="showIncome" /> 수입:
-          {{ totalincome.toLocaleString() }}</label
-        >
-        <label
-          ><input type="checkbox" v-model="showExpense" /> 지출:
-          {{ totalexpenditure.toLocaleString() }}</label
-        > -->
+        <label class="me-3">
+          <input type="checkbox" v-model="showIncome" />
+          수입: {{ totalincome.toLocaleString() }}
+        </label>
+        <label>
+          <input type="checkbox" v-model="showExpense" />
+          지출: {{ totalexpenditure.toLocaleString() }}
+        </label>
       </div>
     </div>
     <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem">
@@ -92,10 +68,15 @@
               class="fa-solid fa-ellipsis-vertical"
             ></i>
             <div v-if="showOptionIndex === index" class="option-popup">
-              <button class="optionbtn">
+              <button class="optionbtn" @click="openEditModal(item)">
                 <i class="fa-solid fa-pen-to-square"></i> 수정하기
               </button>
 
+              <EditTransactionModal
+                v-if="isEditModal"
+                :transaction="selectedTransaction"
+                @closeEditModal="isEditModal = false"
+              />
               <button class="optionbtn" @click="() => handleDelete(item.id)">
                 <div>
                   <i class="fa-solid fa-trash-can"></i>
@@ -136,25 +117,31 @@ import { ref, computed, onMounted } from 'vue';
 import { useTransactionStore } from '@/stores/transaction.js';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import FilterModal from './FilterModal.vue';
+import EditTransactionModal from './EditTransactionModal.vue';
 const store = useTransactionStore();
 const categoryStore = useCategoriesStore();
 const isModal = ref(false);
+const isEditModal = ref(false);
 const showOptionIndex = ref(null);
 
 const transactions = computed(() => store.transactions);
-const totalcount = computed(() => transactions.value.length);
+const totalcount = computed(() => filteredTransactions.value.length);
 
 const selectedType = ref('all');
+
+// 수입 지출 체크박스
+const showIncome = ref(true);
+const showExpense = ref(true);
+
 const totalincome = computed(() => {
   return transactions.value
     .filter((item) => item.expense_type === '수입')
-    .reduce((sum, item) => sum + item.amount, 0);
+    .reduce((sum, item) => sum + Number(item.amount), 0); // 여기도!
 });
-
 const totalexpenditure = computed(() => {
   return transactions.value
     .filter((item) => item.expense_type === '지출')
-    .reduce((sum, item) => sum + item.amount, 0);
+    .reduce((sum, item) => sum + Number(item.amount), 0); // 여기!
 });
 const sortType = ref('desc');
 const changeModal = () => {
@@ -179,11 +166,11 @@ const filteredTransactions = computed(() => {
   let list = [...transactions.value];
 
   // 수입/지출 필터
-  if (selectedType.value === 'income') {
-    list = list.filter((item) => item.expense_type === '수입');
-  } else if (selectedType.value === 'expense') {
-    list = list.filter((item) => item.expense_type === '지출');
-  }
+  list = list.filter((item) => {
+    if (item.expense_type === '수입' && showIncome.value) return true;
+    if (item.expense_type === '지출' && showExpense.value) return true;
+    return false;
+  });
 
   // 카테고리/결제수단 필터
   const selectedCategories = appliedFilters.value
@@ -255,6 +242,13 @@ const getCategoryColor = (categoryName) => {
     (c) => c.name === categoryName
   );
   return category ? category.color : '#007bff';
+};
+
+//수정하기
+const selectedTransaction = ref(null);
+const openEditModal = (transaction) => {
+  selectedTransaction.value = transaction;
+  isEditModal.value = true;
 };
 </script>
 <style scoped>
