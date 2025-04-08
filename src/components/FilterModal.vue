@@ -3,10 +3,15 @@
     <div class="box">
       <div class="filterbox" style="background-color: #fcbf4e; width: 100%">
         <p>필터링</p>
-        <button class="applybtn" @click="handleApply">적용</button>
+        <i
+          class="fa-solid fa-x"
+          style="color: black; cursor: pointer"
+          @click="handleApply"
+        ></i>
       </div>
       <div>
         <!-- 분류 -->
+
         <div style="font-weight: bold">분류</div>
         <button
           v-for="item in categories"
@@ -47,6 +52,9 @@
             class="fa-solid fa-circle-check"
           ></i>
         </button>
+      </div>
+      <div>
+        <button class="applybtn" @click="handleApply">적용</button>
       </div>
     </div>
   </div>
