@@ -22,12 +22,18 @@
 
       <!-- 가운데 -->
       <div class="center">
-        <span class="arrow"><i class="fa-solid fa-arrow-left"></i></span>
+        <span class="arrow" @click="dateStore.prevMonth()"
+          ><i class="fa-solid fa-arrow-left"></i
+        ></span>
         <span class="text-center">
-          <div class="display-2 fw-bold">{{ month }}월</div>
-          <div class="fs-5 fw-normal" style="margin-top: 5px">{{ year }}</div>
+          <div class="display-2 fw-bold">{{ dateStore.month }}월</div>
+          <div class="fs-5 fw-normal" style="margin-top: 5px">
+            {{ dateStore.year }}
+          </div>
         </span>
-        <span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        <span class="arrow" @click="dateStore.nextMonth()"
+          ><i class="fa-solid fa-arrow-right"></i
+        ></span>
       </div>
 
       <!-- 오른쪽 -->
@@ -56,10 +62,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 
-const month = ref(new Date().getMonth() + 1);
-const year = ref(new Date().getFullYear());
+import { useDateStore } from '@/stores/date';
+const dateStore = useDateStore();
+
+const currentDate = ref(new Date());
+const displayedMonth = computed(() => currentDate.value.getMonth() + 1);
+const displayedYear = computed(() => currentDate.value.getFullYear());
+
+const prevMonth = () => {
+  const date = new Date(currentDate.value);
+  date.setMonth(date.getMonth() - 1);
+  currentDate.value = date;
+};
+
+const nextMonth = () => {
+  const date = new Date(currentDate.value);
+  date.setMonth(date.getMonth() + 1);
+  currentDate.value = date;
+};
+
 const name = ref('천재개발자');
 </script>
 

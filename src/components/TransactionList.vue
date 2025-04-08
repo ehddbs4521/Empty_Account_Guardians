@@ -132,10 +132,11 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useTransactionStore } from '@/stores/transaction.js';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import FilterModal from './FilterModal.vue';
+import { useDateStore } from '@/stores/date.js';
 const store = useTransactionStore();
 const categoryStore = useCategoriesStore();
 const isModal = ref(false);
@@ -164,10 +165,17 @@ const toggleOption = (index) => {
   showOptionIndex.value = index === showOptionIndex.value ? null : index;
 };
 
-onMounted(() => {
-  store.fetchTransactions('2025-04');
-  categoryStore.fetchCategories();
-});
+// 월별 이동 시, 데이터 로딩
+const dateStore = useDateStore();
+watch(
+  () => dateStore.currentDate,
+  (newDate) => {
+    const year = newDate.getFullYear();
+    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+    store.fetchTransactions(`${year}-${month}`);
+  },
+  { immediate: true }
+);
 
 // 페이지 네이션
 

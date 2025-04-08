@@ -46,7 +46,7 @@ const colors = ref([]);
 const percentages = ref([]);
 const amounts = ref([]);
 const total = ref(0);
-const currentMonth = ref(new Date().getMonth() + 1); // JS는 0부터 시작하므로 +1
+const currentMonth = ref(new Date().getMonth() + 1);
 const currentMonthStr = ref(`${currentMonth.value}월`);
 
 onMounted(async () => {
@@ -225,7 +225,7 @@ onMounted(async () => {
   gap: 40px;
   padding: 40px 20px;
   max-width: 1000px;
-  margin: 0 auto; /* 가운데 정렬 */
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
