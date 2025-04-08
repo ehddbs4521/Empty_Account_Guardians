@@ -8,7 +8,7 @@
 
       <!-- 오른쪽: 카테고리 리스트 -->
       <div class="list-wrapper">
-        <h2>{{ currentMonthStr }} 총 지출 금액 {{ total.toLocaleString() }}</h2>
+        <h2>{{ currentMonth }}월 총 지출 금액 {{ total.toLocaleString() }}</h2>
         <table>
           <tbody>
             <tr v-for="(label, index) in labels" :key="label">
@@ -38,8 +38,14 @@
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue';
+import { useTransactionStore } from '@/stores/transaction.js';
+import { useCategoriesStore } from '@/stores/useCategoriesStore.js';
+import { useDateStore } from '@/stores/date.js';
 import { Chart } from 'chart.js/auto';
 
+const transactionStore = useTransactionStore();
+const categoriesStore = useCategoriesStore();
+const dateStore = useDateStore();
 const chartRef = ref(null);
 const labels = ref([]);
 const colors = ref([]);
@@ -47,19 +53,25 @@ const percentages = ref([]);
 const amounts = ref([]);
 const total = ref(0);
 const currentMonth = ref(new Date().getMonth() + 1);
-const currentMonthStr = ref(`${currentMonth.value}월`);
 
 onMounted(async () => {
   await nextTick();
 
-  const transactionRes = await fetch('http://localhost:3000/transactions');
-  const transactions = await transactionRes.json();
+  const now = new Date();
 
-  const categoryRes = await fetch('http://localhost:3000/categories');
-  const categoryMeta = await categoryRes.json();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+    2,
+    '0'
+  )}`; //2025-04 형식
+
+  await transactionStore.fetchTransactions(monthKey);
+  await categoriesStore.fetchCategories();
+
+  const transactions = transactionStore.transactions;
+  const categories = categoriesStore.categories;
 
   const expenses = transactions.filter((t) => {
-    const date = new Date(t.date); // t.date는 문자열이라고 가정 (예: "2025-04-07")
+    const date = new Date(t.date);
     return (
       t.expense_type === '지출' && date.getMonth() + 1 === currentMonth.value
     );
@@ -78,7 +90,7 @@ onMounted(async () => {
   total.value = rawData.reduce((sum, value) => sum + value, 0);
 
   const rawColors = rawLabels.map((label) => {
-    const found = categoryMeta.find((cat) => cat.name === label);
+    const found = categories.find((cat) => cat.name === label);
     return found ? found.color : '#cccccc';
   });
 
@@ -109,8 +121,7 @@ onMounted(async () => {
     },
   });
 
-  // 최근 6개월 라벨 구성
-  const now = new Date();
+  // line chart
   const months = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -118,6 +129,8 @@ onMounted(async () => {
       2,
       '0'
     )}`;
+
+    await transactionStore.fetchTransactions(key);
     months.push({
       label: `${d.getFullYear()}년 ${d.getMonth() + 1}월`,
       key,
