@@ -31,7 +31,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = localStorage.getItem("id");
+  const isLoggedIn = localStorage.getItem("nickname");
 
   if (!isLoggedIn && to.path !== "/") {
     next("/");

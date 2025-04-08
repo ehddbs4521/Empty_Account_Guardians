@@ -71,8 +71,8 @@ const handleLogin = async () => {
       );
 
       if (user) {
-        localStorage.setItem("id", user.email);
-        alert(`로그인 성공: ${user.email}`);
+        localStorage.setItem("nickname", user.nickname);
+        alert(`로그인 성공: ${user.nickname}`);
         router.push("/home");
       } else {
         alert("아이디 또는 비밀번호가 올바르지 않습니다.");
