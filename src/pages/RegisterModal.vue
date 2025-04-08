@@ -4,7 +4,7 @@
       <h2>회원가입</h2>
 
       <div class="input-group">
-        <input type="email" v-model="username" placeholder="이메일(아이디)" />
+        <input type="email" v-model="email" placeholder="이메일(아이디)" />
       </div>
       <p v-if="emailInvalid" class="error">유효한 이메일을 입력해주세요.</p>
 
@@ -47,7 +47,7 @@ const passwordMismatch = computed(
 
 const emailInvalid = computed(() => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return email.value && !emailRegex.test(username.value);
+  return email.value && !emailRegex.test(email.value);
 });
 
 const canRegister = computed(
