@@ -1,11 +1,49 @@
 <template>
   <div class="calendar-wrapper">
     <FullCalendar :options="calendarOptions" />
+
+    <div v-if="isModalOpen" class="modal-popup">
+      <div class="modal-content">
+        <h3>{{ selectedDate }} 거래 내역</h3>
+        <ul v-if="selectedTransactions.length" class="transaction-list">
+          <li
+            v-for="(item, index) in selectedTransactions"
+            :key="index"
+            class="transaction-item"
+          >
+            <span
+              class="badge"
+              :style="{
+                backgroundColor: item.categoryColor,
+                color: '#fff',
+                textShadow: '0 0 1px #000, 0 0 1px #000, 0 0 1px #000',
+              }"
+            >
+              {{ item.category }}
+            </span>
+            <span class="description">{{ item.description }}</span>
+            <span
+              class="amount"
+              :class="
+                item.expense_type === '수입'
+                  ? 'amount-income'
+                  : 'amount-expense'
+              "
+            >
+              {{ item.expense_type === "수입" ? "+" : "-"
+              }}{{ item.amount.toLocaleString() }}
+            </span>
+          </li>
+        </ul>
+        <p v-else>해당 날짜에 거래 내역이 없습니다.</p>
+        <button @click="closeModal">닫기</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watchEffect } from "vue";
+import { ref, computed, watchEffect, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -22,6 +60,38 @@ const initialMonth = ref(
 );
 const initialDate = ref(`${initialMonth.value}-01`);
 
+const selectedDate = ref(null);
+const isModalOpen = ref(false);
+const selectedTransactions = ref([]);
+const categories = ref([]);
+
+const fetchCategories = async () => {
+  const res = await fetch("http://localhost:3000/categories");
+  categories.value = await res.json();
+};
+
+const getCategoryColor = (categoryName) => {
+  const found = categories.value.find((c) => c.name === categoryName);
+  return found?.color || "#ccc";
+};
+
+const openModal = (date) => {
+  selectedDate.value = date;
+  selectedTransactions.value = transactionStore.transactions
+    .filter((t) => t.date === date)
+    .map((t) => ({
+      ...t,
+      categoryColor: getCategoryColor(t.category),
+    }));
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  selectedDate.value = null;
+  selectedTransactions.value = [];
+};
+
 const getParsedYearMonth = () => {
   const text = document.querySelector(".fc-toolbar-title")?.textContent?.trim();
   const match = text?.match(/(\d{4})년\s*(\d{1,2})월/);
@@ -31,6 +101,10 @@ const getParsedYearMonth = () => {
 watchEffect(() => {
   const currentMonth = route.query.month || initialMonth.value;
   transactionStore.fetchTransactions(currentMonth);
+});
+
+onMounted(() => {
+  fetchCategories();
 });
 
 const calendarEvents = computed(() => {
@@ -60,6 +134,16 @@ const calendarOptions = computed(() => ({
   fixedWeekCount: true,
   aspectRatio: 1.3,
   height: "auto",
+  dateClick(info) {
+    const clickedDate = info.dateStr;
+    const hasData = transactionStore.transactions.some(
+      (t) => t.date === clickedDate
+    );
+    if (hasData) openModal(clickedDate);
+  },
+  eventClick(info) {
+    openModal(info.event.startStr);
+  },
   datesSet() {
     const currentMonth = getParsedYearMonth();
     if (currentMonth) {
@@ -72,6 +156,9 @@ const calendarOptions = computed(() => ({
 
     el.style.backgroundColor = "transparent";
     el.style.border = "none";
+    el.style.cursor = "pointer";
+    el.classList.add("hoverable-event");
+
     el.innerHTML = `
         <div style="color: #007bff">${incomeText}</div>
         <div style="color: #dc3545">${expenseText}</div>
@@ -92,8 +179,12 @@ const calendarOptions = computed(() => ({
   background: none !important;
   border: none !important;
   white-space: pre-line;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   padding: 0 !important;
+}
+
+.hoverable-event:hover {
+  filter: brightness(1.15);
 }
 
 .fc-daygrid-day-frame {
@@ -127,7 +218,7 @@ const calendarOptions = computed(() => ({
   }
 
   .fc-daygrid-event {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
 
   .fc-toolbar-title {
@@ -137,5 +228,98 @@ const calendarOptions = computed(() => ({
   .fc-daygrid-day-number {
     font-size: 0.75rem !important;
   }
+}
+
+.modal-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  width: 90%;
+  max-width: 520px;
+  background-color: white;
+  border: 2px solid #666;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 460px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.modal-content h3 {
+  font-size: 1.6rem;
+  margin-bottom: 24px;
+  color: #222;
+  text-align: center;
+}
+
+.transaction-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  gap: 16px;
+  font-size: 1.2rem;
+}
+
+.badge {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #333;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.description {
+  flex: 1;
+  font-size: 1.2rem;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amount {
+  font-weight: bold;
+  font-size: 1.3rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.amount-income {
+  color: #2e8b57;
+}
+
+.amount-expense {
+  color: #c0392b;
+}
+
+.modal-content button {
+  display: block;
+  margin: 28px auto 0;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  background: #f4f4f4;
+  border: 1px solid #333;
+  border-radius: 6px;
+  cursor: pointer;
 }
 </style>
