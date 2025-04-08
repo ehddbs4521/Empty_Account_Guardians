@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import chartView from '@/pages/Chart.vue';
-import Calendar from "@/pages/Calendar.vue";
+import Calendar from '@/pages/Calendar.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -20,8 +20,8 @@ const router = createRouter({
     //   component: () => import('../views/AboutView.vue'),
     // },
     {
-      path: "/calendar",
-      name: "calendar",
+      path: '/calendar',
+      name: 'calendar',
       component: Calendar,
     },
     {
