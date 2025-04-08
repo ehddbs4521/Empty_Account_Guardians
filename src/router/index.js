@@ -1,35 +1,43 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/pages/Home.vue';
-import chartView from '@/pages/Chart.vue';
-import Calendar from '@/pages/Calendar.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import Home from "@/pages/Home.vue";
+import chartView from "@/pages/Chart.vue";
+import Calendar from "@/pages/Calendar.vue";
+import Login from "@/pages/Login.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
-      name: 'home',
+      path: "/",
+      name: "login",
+      component: Login,
+    },
+    {
+      path: "/home",
+      name: "home",
       component: Home,
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
     {
-      path: '/calendar',
-      name: 'calendar',
+      path: "/calendar",
+      name: "calendar",
       component: Calendar,
     },
     {
-      path: '/chart',
-      name: 'chart',
+      path: "/chart",
+      name: "chart",
       component: chartView,
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem("id");
+
+  if (!isLoggedIn && to.path !== "/") {
+    next("/");
+  } else {
+    next();
+  }
 });
 
 export default router;
