@@ -16,10 +16,26 @@ export const usePaytypesStore = defineStore('paytypes', () => {
     }
   };
 
+  const addPaytype = async (newPaytype) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/paytypes',
+        newPaytype,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    } catch (error) {
+      console.log('지불방법 추가 중 오류: ', error);
+    }
+  };
+
   // 자동 fetch
   onMounted(() => {
     fetchPaytypes();
   });
 
-  return { paytypes, error, fetchPaytypes };
+  return { paytypes, error, fetchPaytypes, addPaytype };
 });
