@@ -1,14 +1,67 @@
 <template>
   <div class="header-container">
     <div class="header-content">
-      <div>텅장 수호대</div>
-      <div>4월</div>
-      <div>이동용 아이콘</div>
+      <!-- 왼쪽 -->
+      <div class="left">
+        <div class="row">
+          <div class="col">
+            <div class="logo fs-4 fw-bolder">텅장수호대</div>
+          </div>
+        </div>
+        <div class="row">
+          <span
+            ><i class="fa-regular fa-user fa-2x" style="margin: 5px"></i
+          ></span>
+          <span>
+            <span class="fw-bold" style="color: #f97316">{{ name }}</span
+            ><span>님,</span>
+            <div>반갑습니다!</div>
+          </span>
+        </div>
+      </div>
+
+      <!-- 가운데 -->
+      <div class="center">
+        <span class="arrow"><i class="fa-solid fa-arrow-left"></i></span>
+        <span class="text-center">
+          <div class="display-2 fw-bold">{{ month }}월</div>
+          <div class="fs-5 fw-normal" style="margin-top: 5px">{{ year }}</div>
+        </span>
+        <span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+      </div>
+
+      <!-- 오른쪽 -->
+      <div class="right">
+        <router-link to="/">
+          <i
+            class="icon fa-solid fa-list-ul"
+            :class="{ active: $route.path === '/' }"
+          ></i>
+        </router-link>
+        <router-link to="/calendar">
+          <i
+            class="icon fa-regular fa-calendar-days"
+            :class="{ active: $route.path === '/calendar' }"
+          ></i>
+        </router-link>
+        <router-link to="/chart">
+          <i
+            class="icon fa-solid fa-chart-simple"
+            :class="{ active: $route.path === '/chart' }"
+          ></i>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+
+const month = ref(new Date().getMonth() + 1);
+const year = ref(new Date().getFullYear());
+const name = ref('천재개발자');
+</script>
 
 <style scoped>
 .header-container {
@@ -16,16 +69,61 @@
   background-color: #fcbf4e;
   height: 196px;
   display: flex;
-  justify-content: center; /* 가운데 정렬 */
+  justify-content: center;
+  position: relative;
 }
 
 .header-content {
   max-width: 1024px;
   width: 100%;
   display: flex;
-  justify-content: space-between; /* 필요에 따라 center, space-around 등으로 조절 */
+  justify-content: space-between;
   align-items: center;
   padding: 0 16px;
   box-sizing: border-box;
+  position: relative;
+}
+
+/* 왼쪽 */
+.left {
+  flex-shrink: 0;
+}
+
+/* 가운데 */
+.center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+}
+
+/* 오른쪽 */
+.right {
+  display: flex;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.logo {
+  /* color: #f97316; */
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.arrow {
+  font-size: 30px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+.icon {
+  color: #888888;
+  font-size: 24px;
+  padding: 0 5px;
+}
+.icon.active {
+  color: #ffffff;
+}
+.icon:not(.active):hover {
+  color: #dddddd;
 }
 </style>
