@@ -60,7 +60,10 @@
           </td>
           <td>{{ item.description }}</td>
           <td>{{ item.paytype }}</td>
-          <td>{{ item.amount.toLocaleString() }}원</td>
+          <td>
+            {{ item.expense_type === '수입' ? '+' : '-'
+            }}{{ item.amount.toLocaleString() }}원
+          </td>
           <td>{{ item.date }}</td>
           <td class="option-cell">
             <i
@@ -113,7 +116,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useTransactionStore } from '@/stores/transaction.js';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import FilterModal from './FilterModal.vue';
@@ -258,6 +261,28 @@ const openEditModal = (transaction) => {
   selectedTransaction.value = transaction;
   isEditModal.value = true;
 };
+
+const handleClickOutside = (event) => {
+  const popup = document.querySelector('.option-popup');
+  const icon = document.querySelector('.fa-ellipsis-vertical');
+
+  if (
+    popup &&
+    !popup.contains(event.target) &&
+    icon &&
+    !icon.contains(event.target)
+  ) {
+    showOptionIndex.value = null;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
 <style scoped>
 .option-cell {
