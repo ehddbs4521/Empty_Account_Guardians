@@ -1,8 +1,8 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import axios from 'axios';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import axios from "axios";
 
-export const useTransactionStore = defineStore('transaction', () => {
+export const useTransactionStore = defineStore("transaction", () => {
   const transactions = ref([]);
   const error = ref(null);
 
@@ -13,14 +13,14 @@ export const useTransactionStore = defineStore('transaction', () => {
       const response = await fetch(`http://localhost:3000/transactions`);
 
       if (response.ok) {
-        const email = localStorage.getItem("id");
+        const nickname = localStorage.getItem("id");
         const data = await response.json();
 
         transactions.value = data.filter(
-          (t) => t.date.startsWith(month) && t.email === email
+          (t) => t.date.startsWith(month) && t.nickname === nickname
         );
       } else {
-        throw new Error('서버 응답 오류: ' + response.status);
+        throw new Error("서버 응답 오류: " + response.status);
       }
     } catch (err) {
       error.value = err.message;
@@ -43,11 +43,11 @@ export const useTransactionStore = defineStore('transaction', () => {
       };
 
       const response = await axios.post(
-        'http://localhost:3000/transactions',
+        "http://localhost:3000/transactions",
         transactionWithId,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -70,7 +70,7 @@ export const useTransactionStore = defineStore('transaction', () => {
         );
         transactions.value.splice(index, 1);
       } else {
-        throw new Error('트랜잭션 삭제 실패: ' + response.status);
+        throw new Error("트랜잭션 삭제 실패: " + response.status);
       }
     } catch (err) {
       error.value = err.message;
@@ -89,7 +89,7 @@ export const useTransactionStore = defineStore('transaction', () => {
         );
         transactions.value[index] = { ...transaction, id };
       } else {
-        throw new Error('트랜잭션 변경 실패: ' + response.status);
+        throw new Error("트랜잭션 변경 실패: " + response.status);
       }
     } catch (err) {
       error.value = err.message;
