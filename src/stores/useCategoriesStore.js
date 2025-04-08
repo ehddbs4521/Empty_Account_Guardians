@@ -15,9 +15,25 @@ export const useCategoriesStore = defineStore('categories', () => {
     }
   };
 
+  const addCategory = async (newCategory) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/categories',
+        newCategory,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    } catch (error) {
+      console.log('에러: ', error);
+    }
+  };
+
   onMounted(() => {
     fetchCategories();
   });
 
-  return { categories, error, fetchCategories };
+  return { categories, error, fetchCategories, addCategory };
 });

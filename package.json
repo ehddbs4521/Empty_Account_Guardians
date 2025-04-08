@@ -22,6 +22,7 @@
     "v-calendar": "^3.1.2",
     "vue": "^3.5.13",
     "vue-cal": "^5.0.1-rc.14",
+    "vue-color": "^2.8.1",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
