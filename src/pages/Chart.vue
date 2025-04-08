@@ -109,27 +109,56 @@ onMounted(async () => {
     },
   });
 
+  // 최근 6개월 라벨 구성
+  const now = new Date();
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}`;
+    months.push({
+      label: `${d.getFullYear()}년 ${d.getMonth() + 1}월`,
+      key,
+      total: 0,
+    });
+  }
+  // transactions 중 지출만 걸러내고 월별로 합산
+  const expenses2 = transactions.filter((t) => t.expense_type === '지출');
+  expenses2.forEach((t) => {
+    const date = new Date(t.date);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}`;
+    const month = months.find((m) => m.key === key);
+    if (month) {
+      month.total += t.amount;
+    }
+  });
+
+  const lineLabels = months.map((m) => m.label);
+  const lineData = months.map((m) => m.total);
+
   const ctx2 = document.getElementById('lineChart').getContext('2d');
   new Chart(ctx2, {
     type: 'line',
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: lineLabels,
       datasets: [
         {
           label: '월별 지출',
-          data: [65, 59, 80, 81, 56, 55, 40],
+          data: lineData,
           fill: false,
           borderColor: 'rgba(75, 192, 192)',
-          tension: 0.1,
+          tension: 0.3,
         },
       ],
     },
     options: {
       responsive: true,
       scales: {
-        x: {
-          beginAtZero: true,
-        },
         y: {
           beginAtZero: true,
         },
