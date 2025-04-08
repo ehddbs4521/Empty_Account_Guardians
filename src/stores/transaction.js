@@ -1,8 +1,8 @@
-import { ref } from "vue";
-import { defineStore } from "pinia";
-import axios from "axios";
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import axios from 'axios';
 
-export const useTransactionStore = defineStore("transaction", () => {
+export const useTransactionStore = defineStore('transaction', () => {
   const transactions = ref([]);
   const error = ref(null);
 
@@ -16,7 +16,7 @@ export const useTransactionStore = defineStore("transaction", () => {
         const data = await response.json();
         transactions.value = data.filter((t) => t.date.startsWith(month));
       } else {
-        throw new Error("서버 응답 오류: " + response.status);
+        throw new Error('서버 응답 오류: ' + response.status);
       }
     } catch (err) {
       error.value = err.message;
@@ -39,11 +39,11 @@ export const useTransactionStore = defineStore("transaction", () => {
       };
 
       const response = await axios.post(
-        "http://localhost:3000/transactions",
+        'http://localhost:3000/transactions',
         transactionWithId,
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -55,7 +55,6 @@ export const useTransactionStore = defineStore("transaction", () => {
   };
 
   const deleteTransaction = async (id) => {
-    console.log("삭제");
     try {
       const response = await axios.delete(
         `http://localhost:3000/transactions/${id}`
@@ -67,7 +66,26 @@ export const useTransactionStore = defineStore("transaction", () => {
         );
         transactions.value.splice(index, 1);
       } else {
-        throw new Error("트랜잭션 삭제 실패: " + response.status);
+        throw new Error('트랜잭션 삭제 실패: ' + response.status);
+      }
+    } catch (err) {
+      error.value = err.message;
+    }
+  };
+
+  const updateTransaction = async (id, transaction) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/transactions/${id}`,
+        transaction
+      );
+      if (response.status === 200) {
+        let index = transactions.value.findIndex(
+          (transaction) => transaction.id === id
+        );
+        transactions.value[index] = { ...transaction, id };
+      } else {
+        throw new Error('트랜잭션 변경 실패: ' + response.status);
       }
     } catch (err) {
       error.value = err.message;
@@ -79,5 +97,6 @@ export const useTransactionStore = defineStore("transaction", () => {
     fetchTransactions,
     addTransaction,
     deleteTransaction,
+    updateTransaction,
   };
 });
