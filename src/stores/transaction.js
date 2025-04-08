@@ -1,8 +1,8 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import axios from 'axios';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import axios from "axios";
 
-export const useTransactionStore = defineStore('transaction', () => {
+export const useTransactionStore = defineStore("transaction", () => {
   const transactions = ref([]);
   const error = ref(null);
 
@@ -10,15 +10,13 @@ export const useTransactionStore = defineStore('transaction', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/transactions?date_like=${month}`
-      );
+      const response = await fetch(`http://localhost:3000/transactions`);
 
       if (response.ok) {
         const data = await response.json();
-        transactions.value = data;
+        transactions.value = data.filter((t) => t.date.startsWith(month));
       } else {
-        throw new Error('서버 응답 오류: ' + response.status);
+        throw new Error("서버 응답 오류: " + response.status);
       }
     } catch (err) {
       error.value = err.message;
@@ -29,31 +27,27 @@ export const useTransactionStore = defineStore('transaction', () => {
     error.value = null;
 
     try {
-      await fetchTransactions(newTransaction.date.slice(0, 7)); // 예: "2025-03"
-      // 1. 현재 가장 큰 id 찾기
+      await fetchTransactions(newTransaction.date.slice(0, 7));
       const maxId = transactions.value.reduce((max, t) => {
         const numericId = Number(t.id);
         return numericId > max ? numericId : max;
       }, 0);
 
-      // 2. 새 id 지정
       const transactionWithId = {
         id: String(maxId + 1),
         ...newTransaction,
       };
 
-      // 3. POST 요청 (axios 사용)
       const response = await axios.post(
-        'http://localhost:3000/transactions',
+        "http://localhost:3000/transactions",
         transactionWithId,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
-      // 4. 성공 시 목록에 반영
       transactions.value.push(response.data);
     } catch (err) {
       error.value = err.message;
@@ -61,7 +55,7 @@ export const useTransactionStore = defineStore('transaction', () => {
   };
 
   const deleteTransaction = async (id) => {
-    console.log('삭제');
+    console.log("삭제");
     try {
       const response = await axios.delete(
         `http://localhost:3000/transactions/${id}`
@@ -73,7 +67,7 @@ export const useTransactionStore = defineStore('transaction', () => {
         );
         transactions.value.splice(index, 1);
       } else {
-        throw new Error('트랜잭션 삭제 실패: ' + response.status);
+        throw new Error("트랜잭션 삭제 실패: " + response.status);
       }
     } catch (err) {
       error.value = err.message;
