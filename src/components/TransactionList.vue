@@ -6,16 +6,23 @@
     </button>
 
     <teleport to="#modal">
-      <FilterModal v-if="isModal" @close-modal="isModal = false" />
+      <FilterModal
+        v-if="isModal"
+        @applyFilter="applyFilter"
+        :appliedFilters="appliedFilters"
+      />
     </teleport>
-    <div style="display: flex; justify-content: space-between">
-      <button class="filterbtn mb-3">
-        필터 <i class="fa-solid fa-sliders"></i>
-      </button>
-
-      <div>
+    <div style="display: flex; justify-content: flex-start">
+      <div class="applyfilter me-1" v-for="filter in appliedFilters">
+        <span class="me-1" style="font-weight: bold">{{ filter.name }} </span
+        ><i class="fa-solid fa-x" @click="removeFilter(filter)"></i>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end">
+      <div class="mb-3">
         <input
           type="radio"
+          d
           name="optradio"
           v-model="selectedType"
           id="income"
@@ -157,16 +164,33 @@ onMounted(() => {
 const currentPage = ref(1); // 현재 페이지
 const itemsPerPage = 10; // 페이지 당 항목 수
 
-// 필터링된 트랜잭션 목록
+// 필터링 된 입.출금 목록
 const filteredTransactions = computed(() => {
   let list = [...transactions.value];
 
+  // 수입/지출 필터
   if (selectedType.value === 'income') {
     list = list.filter((item) => item.expense_type === '수입');
   } else if (selectedType.value === 'expense') {
     list = list.filter((item) => item.expense_type === '지출');
   }
 
+  // 카테고리/결제수단 필터
+  const selectedCategories = appliedFilters.value
+    .filter((f) => f.type === 'category')
+    .map((f) => f.name);
+
+  const selectedPaytypes = appliedFilters.value
+    .filter((f) => f.type === 'paytype')
+    .map((f) => f.name);
+
+  if (selectedCategories.length > 0) {
+    list = list.filter((item) => selectedCategories.includes(item.category));
+  }
+
+  if (selectedPaytypes.length > 0) {
+    list = list.filter((item) => selectedPaytypes.includes(item.paytype));
+  }
   return list;
 });
 
@@ -191,6 +215,21 @@ const goToPage = (page) => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page;
   }
+};
+
+// 카테고리, 결제수단 필터
+const appliedFilters = ref([]);
+
+const applyFilter = (filterItems) => {
+  appliedFilters.value = filterItems;
+  isModal.value = false;
+
+  console.log(appliedFilters.value);
+};
+
+//필터 제거
+const removeFilter = (filter) => {
+  appliedFilters.value = appliedFilters.value.filter((f) => f.id !== filter.id);
 };
 </script>
 <style scoped>
@@ -271,5 +310,21 @@ i {
 .pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.applyfilter {
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 0 10px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px; /* 글자 크기 줄이기 */
+  line-height: 1;
+}
+
+.applyfilter span,
+.applyfilter i {
+  font-size: 12px; /* span과 아이콘 크기 통일 */
 }
 </style>

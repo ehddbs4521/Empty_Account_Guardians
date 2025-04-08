@@ -6,29 +6,44 @@
         <button class="applybtn" @click="handleApply">적용</button>
       </div>
       <div>
+        <!-- 분류 -->
         <div style="font-weight: bold">분류</div>
         <button
           v-for="item in categories"
-          :key="item"
-          :class="['custom-btn', selected.includes(item) ? 'selected' : '']"
-          @click="toggleCategory(item)"
+          :key="'cat-' + item.id"
+          :class="[
+            'custom-btn',
+            selected.some((v) => v.id === item.id && v.type === 'category')
+              ? 'selected'
+              : '',
+          ]"
+          @click="toggleItem({ ...item, type: 'category' })"
         >
           {{ item.name }}
           <i
-            v-if="selected.includes(item)"
+            v-if="
+              selected.some((v) => v.id === item.id && v.type === 'category')
+            "
             class="fa-solid fa-circle-check"
           ></i>
         </button>
         <div style="font-weight: bold">결제수단</div>
         <button
           v-for="item in paytypes"
-          :key="item"
-          :class="['custom-btn', selected.includes(item) ? 'selected' : '']"
-          @click="toggleCategory(item)"
+          :key="'pay-' + item.id"
+          :class="[
+            'custom-btn',
+            selected.some((v) => v.id === item.id && v.type === 'paytype')
+              ? 'selected'
+              : '',
+          ]"
+          @click="toggleItem({ ...item, type: 'paytype' })"
         >
           {{ item.name }}
           <i
-            v-if="selected.includes(item)"
+            v-if="
+              selected.some((v) => v.id === item.id && v.type === 'paytype')
+            "
             class="fa-solid fa-circle-check"
           ></i>
         </button>
@@ -37,7 +52,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useCategoriesStore } from '@/stores/useCategoriesStore.js';
 import { usePaytypesStore } from '@/stores/usePaytypesStore.js';
 
@@ -45,20 +60,40 @@ const categorystore = useCategoriesStore();
 const categories = computed(() => categorystore.categories);
 const emit = defineEmits(['closeModal']);
 
-const handleApply = () => {
-  emit('closeModal'); // 부모에게 이벤트 발생
-};
-
 const paytypestore = usePaytypesStore();
 const paytypes = computed(() => paytypestore.paytypes);
 const selected = ref([]);
-const toggleCategory = (item) => {
-  if (selected.value.includes(item)) {
-    selected.value = selected.value.filter((v) => v !== item);
+
+const props = defineProps({
+  appliedFilters: {
+    type: Array,
+    default: () => [],
+  },
+});
+
+const toggleItem = (item) => {
+  const idx = selected.value.findIndex(
+    (v) => v.id === item.id && v.type === item.type
+  );
+  if (idx !== -1) {
+    selected.value.splice(idx, 1);
   } else {
     selected.value.push(item);
   }
+  console.log(selected.value);
 };
+
+const handleApply = () => {
+  emit('applyFilter', selected.value);
+};
+
+watch(
+  () => props.appliedFilters,
+  (newFilters) => {
+    selected.value = [...newFilters];
+  },
+  { immediate: true }
+);
 </script>
 <style scoped>
 .modal {
