@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-
+import axios from 'axios';
 export const useTransactionStore = defineStore('transaction', () => {
   const transactions = ref([]);
   const error = ref(null);
@@ -61,10 +61,30 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
   };
 
+  const deleteTransaction = async (id) => {
+    console.log('삭제');
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/transactions/${id}`
+      );
+
+      if (response.status == 200) {
+        let index = transactions.value.findIndex(
+          (transaction) => transaction.id === id
+        );
+        transactions.value.splice(index, 1);
+      } else {
+        throw new Error('트랜잭션 삭제 실패: ' + response.status);
+      }
+    } catch (err) {
+      error.value = err.message;
+    }
+  };
   return {
     transactions,
     error,
     fetchTransactions,
     addTransaction,
+    deleteTransaction,
   };
 });
