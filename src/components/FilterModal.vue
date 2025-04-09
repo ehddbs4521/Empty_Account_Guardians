@@ -1,18 +1,17 @@
 <template>
   <div class="modal">
     <div class="box">
-      <div class="filterbox" style="background-color: #fcbf4e; width: 100%">
-        <p>필터링</p>
+      <div class="filterbox d-flex flex-row" style="width: 100%">
+        <i class="fa-solid fa-sliders mt-3 ms-2" style="color: black"> 필터</i>
         <i
-          class="fa-solid fa-x"
+          class="fa-solid fa-x mt-3 me-2"
           style="color: black; cursor: pointer"
           @click="handleApply"
         ></i>
       </div>
-      <div>
+      <div class="p-3">
         <!-- 분류 -->
-
-        <div style="font-weight: bold">분류</div>
+        <div style="font-weight: bold">카테고리</div>
         <button
           v-for="item in categories"
           :key="'cat-' + item.id"
@@ -32,6 +31,7 @@
             class="fa-solid fa-circle-check"
           ></i>
         </button>
+
         <div style="font-weight: bold">결제수단</div>
         <button
           v-for="item in paytypes"
@@ -53,24 +53,25 @@
           ></i>
         </button>
       </div>
-      <div>
-        <button class="applybtn" @click="handleApply">적용</button>
+      <div class="button-group mb-3 px-3">
+        <button class="btn-reset me-2" @click="handleReset">초기화</button>
+        <button class="btn-apply" @click="handleApply">적용</button>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useCategoriesStore } from '@/stores/useCategoriesStore.js';
 import { usePaytypesStore } from '@/stores/usePaytypesStore.js';
 
 const categorystore = useCategoriesStore();
 const categories = computed(() => categorystore.categories);
-const emit = defineEmits(['closeModal']);
-
 const paytypestore = usePaytypesStore();
 const paytypes = computed(() => paytypestore.paytypes);
 const selected = ref([]);
+
+const emit = defineEmits(['closeModal']);
 
 const props = defineProps({
   appliedFilters: {
@@ -91,10 +92,6 @@ const toggleItem = (item) => {
   console.log(selected.value);
 };
 
-const handleApply = () => {
-  emit('applyFilter', selected.value);
-};
-
 watch(
   () => props.appliedFilters,
   (newFilters) => {
@@ -102,6 +99,14 @@ watch(
   },
   { immediate: true }
 );
+
+const handleApply = () => {
+  emit('applyFilter', selected.value);
+};
+
+const handleReset = () => {
+  selected.value = [];
+};
 </script>
 <style scoped>
 .modal {
@@ -139,12 +144,7 @@ watch(
   align-items: center;
   padding: 10px;
 }
-.applybtn {
-  border: none;
-  border: 1px solid white;
-  border-radius: 10px;
-  background-color: #fcbf4e;
-}
+
 .custom-btn {
   padding: 0.5rem 1rem;
   border: 1px solid lightgray;
@@ -161,5 +161,35 @@ watch(
 }
 i {
   color: #fcbf4e;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.btn-reset,
+.btn-apply {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-reset {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btn-apply {
+  background-color: #fcbf4e;
+  color: white;
+}
+
+button {
+  font-size: 12px;
 }
 </style>

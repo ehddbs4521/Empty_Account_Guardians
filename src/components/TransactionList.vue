@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%" v-show="transactions">
+  <div class="mt-5" style="width: 100%" v-show="transactions">
     <p class="totalcount">전체 내역 {{ totalcount }}건</p>
     <button @click="changeModal" class="filterbtn mb-3">
       필터 <i class="fa-solid fa-sliders"></i>
@@ -11,8 +11,11 @@
       :appliedFilters="appliedFilters"
     />
 
-    <div style="display: flex; justify-content: flex-start">
-      <div class="applyfilter me-1" v-for="filter in appliedFilters">
+    <div
+      class="applied-filter-container"
+      style="display: flex; justify-content: flex-start"
+    >
+      <div class="applyfilter me-1 rounded-5" v-for="filter in appliedFilters">
         <span class="me-1" style="font-weight: bold">{{ filter.name }} </span
         ><i class="fa-solid fa-x" @click="removeFilter(filter)"></i>
       </div>
@@ -20,17 +23,25 @@
     <div style="display: flex; justify-content: flex-end">
       <div class="mb-3">
         <label class="me-3">
-          <input type="checkbox" v-model="showIncome" />
+          <input class="income-checkbox" type="checkbox" v-model="showIncome" />
           수입: {{ totalincome.toLocaleString() }}
         </label>
         <label>
-          <input type="checkbox" v-model="showExpense" />
+          <input
+            class="expense-checkbox"
+            type="checkbox"
+            v-model="showExpense"
+          />
           지출: {{ totalexpenditure.toLocaleString() }}
         </label>
       </div>
     </div>
-    <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem">
-      <select v-model="sortType" style="width: 100px">
+    <div class="d-flex justify-content-end mb-4">
+      <select
+        v-model="sortType"
+        class="form-select w-auto"
+        style="font-size: 14px"
+      >
         <option value="desc" selected>최신순</option>
         <option value="asc">오래된순</option>
       </select>
@@ -266,15 +277,24 @@ const openEditModal = (transaction) => {
 };
 
 const handleClickOutside = (event) => {
-  const popup = document.querySelector('.option-popup');
-  const icon = document.querySelector('.fa-ellipsis-vertical');
+  const optionPopups = document.querySelectorAll('.option-popup');
+  const optionIcons = document.querySelectorAll('.fa-ellipsis-vertical');
 
-  if (
-    popup &&
-    !popup.contains(event.target) &&
-    icon &&
-    !icon.contains(event.target)
-  ) {
+  let clickedInsidePopupOrIcon = false;
+
+  optionPopups.forEach((popup) => {
+    if (popup.contains(event.target)) {
+      clickedInsidePopupOrIcon = true;
+    }
+  });
+
+  optionIcons.forEach((icon) => {
+    if (icon.contains(event.target)) {
+      clickedInsidePopupOrIcon = true;
+    }
+  });
+
+  if (!clickedInsidePopupOrIcon) {
     showOptionIndex.value = null;
   }
 };
@@ -330,6 +350,9 @@ i {
   padding: 0.2rem 1rem;
   font-weight: bold;
 }
+.filterbtn:hover {
+  color: #ffb428;
+}
 .custom-checkbox {
   position: relative;
   display: inline-block;
@@ -367,8 +390,8 @@ i {
   cursor: not-allowed;
 }
 .applyfilter {
-  background-color: lightgray;
-  border-radius: 10px;
+  background-color: rgb(238, 238, 238);
+  /* border-radius: 10px; */
   padding: 0 10px;
   height: 30px;
   display: flex;
@@ -381,5 +404,15 @@ i {
 .applyfilter span,
 .applyfilter i {
   font-size: 12px; /* span과 아이콘 크기 통일 */
+}
+
+.applied-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.expense-checkbox {
+  accent-color: rgb(255, 59, 59);
 }
 </style>
