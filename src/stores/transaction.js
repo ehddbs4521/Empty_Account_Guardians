@@ -1,20 +1,20 @@
-import { ref } from "vue";
-import { defineStore } from "pinia";
-import axios from "axios";
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import axios from 'axios';
 
-export const useTransactionStore = defineStore("transaction", () => {
+export const useTransactionStore = defineStore('transaction', () => {
   const transactions = ref([]);
   const error = ref(null);
 
   const fetchTransactions = async (nickname) => {
     error.value = null;
     try {
-      const response = await axios.get("http://localhost:3000/transactions", {
+      const response = await axios.get('http://localhost:3000/transactions', {
         params: { nickname },
       });
       transactions.value = response.data;
     } catch (error) {
-      console.log("transactios호출에서 오류: ", error);
+      console.log('transactios호출에서 오류: ', error);
     }
   };
 
@@ -25,7 +25,7 @@ export const useTransactionStore = defineStore("transaction", () => {
       // 전체 transactions 불러오기
       const response = await fetch(`http://localhost:3000/transactions`);
       if (!response.ok) {
-        throw new Error("서버 응답 오류: " + response.status);
+        throw new Error('서버 응답 오류: ' + response.status);
       }
 
       const allData = await response.json();
@@ -35,10 +35,10 @@ export const useTransactionStore = defineStore("transaction", () => {
         const numericId = Number(t.id);
         return numericId > max ? numericId : max;
       }, 0);
-      console.log("maxId:", maxId);
+      // console.log("maxId:", maxId);
 
       // 현재 월 기준 데이터 다시 필터링해서 보여줄 용도
-      const nickname = localStorage.getItem("nickname");
+      const nickname = localStorage.getItem('nickname');
       transactions.value = allData.filter(
         (t) =>
           t.date.startsWith(newTransaction.date.slice(0, 7)) &&
@@ -54,11 +54,11 @@ export const useTransactionStore = defineStore("transaction", () => {
 
       // POST 요청으로 저장
       const postResponse = await axios.post(
-        "http://localhost:3000/transactions",
+        'http://localhost:3000/transactions',
         transactionWithId,
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -82,7 +82,7 @@ export const useTransactionStore = defineStore("transaction", () => {
         );
         transactions.value.splice(index, 1);
       } else {
-        throw new Error("트랜잭션 삭제 실패: " + response.status);
+        throw new Error('트랜잭션 삭제 실패: ' + response.status);
       }
     } catch (err) {
       error.value = err.message;
@@ -91,7 +91,7 @@ export const useTransactionStore = defineStore("transaction", () => {
 
   const updateTransaction = async (id, transaction) => {
     try {
-      const nickname = localStorage.getItem("nickname");
+      const nickname = localStorage.getItem('nickname');
 
       // nickname을 넣은 새로운 객체 생성
       const updatedTransaction = {
@@ -109,7 +109,7 @@ export const useTransactionStore = defineStore("transaction", () => {
         let index = transactions.value.findIndex((t) => t.id === id);
         transactions.value[index] = updatedTransaction;
       } else {
-        throw new Error("트랜잭션 변경 실패: " + response.status);
+        throw new Error('트랜잭션 변경 실패: ' + response.status);
       }
     } catch (err) {
       error.value = err.message;
