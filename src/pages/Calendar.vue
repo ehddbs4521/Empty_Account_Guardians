@@ -100,7 +100,7 @@ const getParsedYearMonth = () => {
 
 watchEffect(() => {
   const currentMonth = route.query.month || initialMonth.value;
-  transactionStore.fetchTransactions(currentMonth);
+  // transactionStore.fetchTransactions(currentMonth);
 });
 
 onMounted(() => {

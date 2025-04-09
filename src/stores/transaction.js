@@ -6,24 +6,15 @@ export const useTransactionStore = defineStore('transaction', () => {
   const transactions = ref([]);
   const error = ref(null);
 
-  const fetchTransactions = async (month) => {
+  const fetchTransactions = async (nickname) => {
     error.value = null;
-
     try {
-      const response = await fetch(`http://localhost:3000/transactions`);
-
-      if (response.ok) {
-        const nickname = localStorage.getItem('nickname');
-        const data = await response.json();
-
-        transactions.value = data.filter(
-          (t) => t.date.startsWith(month) && t.nickname === nickname
-        );
-      } else {
-        throw new Error('서버 응답 오류: ' + response.status);
-      }
-    } catch (err) {
-      error.value = err.message;
+      const response = await axios.get('http://localhost:3000/transactions', {
+        params: { nickname },
+      });
+      transactions.value = response.data;
+    } catch (error) {
+      console.log('transactios호출에서 오류: ', error);
     }
   };
 
