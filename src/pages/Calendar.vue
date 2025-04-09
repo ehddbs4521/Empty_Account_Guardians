@@ -30,7 +30,7 @@
                   : 'amount-expense'
               "
             >
-              {{ item.expense_type === "수입" ? "+" : "-"
+              {{ item.expense_type === '수입' ? '+' : '-'
               }}{{ item.amount.toLocaleString() }}
             </span>
           </li>
@@ -43,13 +43,13 @@
 </template>
 
 <script setup>
-import { ref, computed, watchEffect, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import FullCalendar from "@fullcalendar/vue3";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import koLocale from "@fullcalendar/core/locales/ko";
-import { useTransactionStore } from "@/stores/transaction";
+import { ref, computed, watchEffect, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import koLocale from '@fullcalendar/core/locales/ko';
+import { useTransactionStore } from '@/stores/transaction';
 
 const route = useRoute();
 const router = useRouter();
@@ -66,13 +66,13 @@ const selectedTransactions = ref([]);
 const categories = ref([]);
 
 const fetchCategories = async () => {
-  const res = await fetch("http://localhost:3000/categories");
+  const res = await fetch('http://localhost:3000/categories');
   categories.value = await res.json();
 };
 
 const getCategoryColor = (categoryName) => {
   const found = categories.value.find((c) => c.name === categoryName);
-  return found?.color || "#ccc";
+  return found?.color || '#ccc';
 };
 
 const openModal = (date) => {
@@ -93,9 +93,9 @@ const closeModal = () => {
 };
 
 const getParsedYearMonth = () => {
-  const text = document.querySelector(".fc-toolbar-title")?.textContent?.trim();
+  const text = document.querySelector('.fc-toolbar-title')?.textContent?.trim();
   const match = text?.match(/(\d{4})년\s*(\d{1,2})월/);
-  return match ? `${match[1]}-${match[2].padStart(2, "0")}` : null;
+  return match ? `${match[1]}-${match[2].padStart(2, '0')}` : null;
 };
 
 watchEffect(() => {
@@ -111,8 +111,8 @@ const calendarEvents = computed(() => {
   const grouped = transactionStore.transactions.reduce(
     (acc, { date, expense_type, amount }) => {
       if (!acc[date]) acc[date] = { income: 0, expense: 0 };
-      if (expense_type === "수입") acc[date].income += Number(amount);
-      else if (expense_type === "지출") acc[date].expense += Number(amount);
+      if (expense_type === '수입') acc[date].income += Number(amount);
+      else if (expense_type === '지출') acc[date].expense += Number(amount);
       return acc;
     },
     {}
@@ -127,13 +127,13 @@ const calendarEvents = computed(() => {
 const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, interactionPlugin],
   locale: koLocale,
-  initialView: "dayGridMonth",
+  initialView: 'dayGridMonth',
   initialDate: initialDate.value,
   events: calendarEvents.value,
-  eventDisplay: "block",
+  eventDisplay: 'block',
   fixedWeekCount: true,
   aspectRatio: 1.3,
-  height: "auto",
+  height: 'auto',
   dateClick(info) {
     const clickedDate = info.dateStr;
     const hasData = transactionStore.transactions.some(
@@ -152,12 +152,12 @@ const calendarOptions = computed(() => ({
   },
   eventDidMount(info) {
     const el = info.el;
-    const [incomeText, expenseText] = info.event.title.split("\n");
+    const [incomeText, expenseText] = info.event.title.split('\n');
 
-    el.style.backgroundColor = "transparent";
-    el.style.border = "none";
-    el.style.cursor = "pointer";
-    el.classList.add("hoverable-event");
+    el.style.backgroundColor = 'transparent';
+    el.style.border = 'none';
+    el.style.cursor = 'pointer';
+    el.classList.add('hoverable-event');
 
     el.innerHTML = `
         <div style="color: #007bff">${incomeText}</div>

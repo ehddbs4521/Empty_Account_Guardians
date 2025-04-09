@@ -5,6 +5,12 @@
       "email": "ehddbs452100@naver.com",
       "nickname": "포켓보이 중원",
       "password": "kim2580mi!"
+    },
+    {
+      "id": "9427",
+      "email": "test@test.com",
+      "nickname": "주머니",
+      "password": "123456789a!"
     }
   ],
   "paytypes": [
@@ -87,24 +93,27 @@
   "transactions": [
     {
       "id": "1",
+      "nickname": "주머니",
       "paytype": "현금",
-      "category": "식비",
-      "date": "2025-04-05",
-      "description": "편의점 간식",
-      "amount": 3500,
-      "expense_type": "지출"
+      "category": "월급",
+      "date": "2025-03-03",
+      "description": "돈받음 ㅠㅋㅋㅋㅋ",
+      "amount": 100000000,
+      "expense_type": "수입"
     },
     {
       "id": "2",
-      "paytype": "카드",
-      "category": "교통비",
-      "date": "2025-04-08",
-      "description": "버스 요금",
-      "amount": 1200,
-      "expense_type": "지출"
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "월급",
+      "date": "2025-04-03",
+      "description": "돈줘 ㅠㅋㅋㅋㅋ",
+      "amount": 100000000,
+      "expense_type": "수입"
     },
     {
       "id": "3",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "용돈",
       "date": "2025-02-18",
@@ -113,16 +122,8 @@
       "expense_type": "지출"
     },
     {
-      "id": "4",
-      "paytype": "현금",
-      "category": "식비",
-      "date": "2025-04-12",
-      "description": "점심 식사",
-      "amount": 9000,
-      "expense_type": "지출"
-    },
-    {
       "id": "5",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "통신비",
       "date": "2025-03-10",
@@ -132,6 +133,7 @@
     },
     {
       "id": "6",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "교통비",
       "date": "2025-04-02",
@@ -141,6 +143,7 @@
     },
     {
       "id": "7",
+      "nickname": "포켓보이 중원",
       "paytype": "카드",
       "category": "카페비",
       "date": "2025-04-09",
@@ -150,6 +153,7 @@
     },
     {
       "id": "8",
+      "nickname": "포켓보이 중원",
       "email": "ehddbs452100@naver.com",
       "paytype": "현금",
       "category": "식비",
@@ -160,6 +164,7 @@
     },
     {
       "id": "9",
+      "nickname": "포켓보이 중원",
       "paytype": "카드",
       "category": "교통비",
       "date": "2025-04-11",
@@ -169,6 +174,7 @@
     },
     {
       "id": "10",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "식비",
       "date": "2025-04-15",
@@ -178,6 +184,7 @@
     },
     {
       "id": "11",
+      "nickname": "포켓보이 중원",
       "paytype": "카드",
       "category": "용돈",
       "date": "2025-02-26",
@@ -187,6 +194,7 @@
     },
     {
       "id": "12",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "여가비",
       "date": "2025-04-07",
@@ -196,6 +204,7 @@
     },
     {
       "id": "13",
+      "nickname": "포켓보이 중원",
       "paytype": "카드",
       "category": "통신비",
       "date": "2025-04-18",
@@ -205,6 +214,7 @@
     },
     {
       "id": "14",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "교통비",
       "date": "2025-04-03",
@@ -214,6 +224,7 @@
     },
     {
       "id": "15",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "식비",
       "date": "2025-03-15",
@@ -223,6 +234,7 @@
     },
     {
       "id": "16",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "월급",
       "date": "2025-04-10",
@@ -232,6 +244,7 @@
     },
     {
       "id": "17",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "여가비",
       "date": "2025-04-01",
@@ -241,6 +254,7 @@
     },
     {
       "id": "18",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "식비",
       "date": "2025-04-06",
@@ -250,6 +264,7 @@
     },
     {
       "id": "19",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "교통비",
       "date": "2025-04-13",
@@ -259,6 +274,7 @@
     },
     {
       "id": "20",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "여가비",
       "date": "2025-02-20",
@@ -268,6 +284,7 @@
     },
     {
       "id": "21",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "통신비",
       "date": "2025-04-19",
@@ -277,6 +294,7 @@
     },
     {
       "id": "22",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "식비",
       "date": "2025-04-20",
@@ -286,6 +304,7 @@
     },
     {
       "id": "23",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "여가비",
       "date": "2025-03-08",
@@ -295,6 +314,7 @@
     },
     {
       "id": "24",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "교통비",
       "date": "2025-04-04",
@@ -304,6 +324,7 @@
     },
     {
       "id": "25",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "식비",
       "date": "2025-04-21",
@@ -313,6 +334,7 @@
     },
     {
       "id": "26",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "월급",
       "date": "2025-04-22",
@@ -322,6 +344,7 @@
     },
     {
       "id": "27",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "용돈",
       "date": "2025-04-16",
@@ -331,6 +354,7 @@
     },
     {
       "id": "28",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "여가비",
       "date": "2025-04-14",
@@ -340,6 +364,7 @@
     },
     {
       "id": "29",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "식비",
       "date": "2025-04-23",
@@ -349,6 +374,7 @@
     },
     {
       "id": "30",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "교통비",
       "date": "2025-02-11",
@@ -358,6 +384,7 @@
     },
     {
       "id": "31",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "용돈",
       "date": "2025-04-17",
@@ -367,6 +394,7 @@
     },
     {
       "id": "32",
+      "nickname": "주머니",
       "paytype": "현금",
       "category": "식비",
       "date": "2025-03-17",
@@ -376,6 +404,7 @@
     },
     {
       "id": "33",
+      "nickname": "주머니",
       "paytype": "카드",
       "category": "여가비",
       "date": "2025-04-24",
@@ -385,6 +414,7 @@
     },
     {
       "id": "34",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "월급",
       "date": "2025-04-25",
@@ -394,6 +424,7 @@
     },
     {
       "id": "35",
+      "nickname": "포켓보이 중원",
       "paytype": "카드",
       "category": "교통비",
       "date": "2025-04-26",
@@ -403,6 +434,7 @@
     },
     {
       "id": "36",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "식비",
       "date": "2025-04-27",
@@ -412,6 +444,7 @@
     },
     {
       "id": "37",
+      "nickname": "포켓보이 중원",
       "paytype": "카드",
       "category": "통신비",
       "date": "2025-04-28",
@@ -421,6 +454,7 @@
     },
     {
       "id": "38",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "식비",
       "date": "2025-04-29",
@@ -430,15 +464,17 @@
     },
     {
       "id": "39",
-      "paytype": "카드",
-      "category": "여가비",
-      "date": "2025-04-30",
-      "description": "기부",
-      "amount": 10000,
+      "nickname": "포켓보이 중원",
+      "paytype": "현금",
+      "category": "식비",
+      "date": "2025-04-29",
+      "description": "간식",
+      "amount": 5000,
       "expense_type": "지출"
     },
     {
       "id": "40",
+      "nickname": "포켓보이 중원",
       "paytype": "현금",
       "category": "식비",
       "date": "2025-03-04",
@@ -448,6 +484,7 @@
     },
     {
       "id": "41",
+      "nickname": "주머니",
       "paytype": "카카오 카드",
       "category": "교통비",
       "date": "2025-04-02",
@@ -457,6 +494,7 @@
     },
     {
       "id": "42",
+      "nickname": "주머니",
       "paytype": "국민 카드",
       "category": "교통비",
       "date": "2025-04-07",
@@ -466,6 +504,7 @@
     },
     {
       "id": "43",
+      "nickname": "주머니",
       "paytype": "카카오 카드",
       "category": "여가비",
       "date": "2025-04-01",
@@ -475,12 +514,53 @@
     },
     {
       "id": "44",
+      "nickname": "주머니",
       "paytype": "토스",
       "category": "패스트푸드",
       "date": "2025-04-02",
       "description": "햄버거 먹음 ㅋ",
       "amount": 12000,
       "expense_type": "지출"
+    },
+    {
+      "id": "45",
+      "nickname": "주머니",
+      "paytype": "국민 카드",
+      "category": "교통비",
+      "date": "2025-04-28",
+      "description": "버스",
+      "amount": 3000,
+      "expense_type": "지출"
+    },
+    {
+      "id": "46",
+      "nickname": "포켓보이 중원",
+      "expense_type": "지출",
+      "date": "2025-04-30",
+      "category": "교통비",
+      "description": "전철ㅋㅋㅋㅋㅋㅋㅋ",
+      "paytype": "현금",
+      "amount": 2500
+    },
+    {
+      "id": "47",
+      "nickname": "포켓보이 중원",
+      "paytype": "국민 카드",
+      "category": "여가비",
+      "date": "2025-04-09",
+      "description": "게임",
+      "amount": 1000000,
+      "expense_type": "지출"
+    },
+    {
+      "id": "48",
+      "nickname": "포켓보이 중원",
+      "expense_type": "수입",
+      "date": "2025-04-30",
+      "category": "월급",
+      "description": "ㅇㅇㅇㅇㅇㅇ",
+      "paytype": "현금",
+      "amount": 100000000000
     }
   ]
 }
