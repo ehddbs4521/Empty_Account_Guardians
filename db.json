@@ -16,77 +16,98 @@
   "paytypes": [
     {
       "name": "현금",
+      "nickname": "주머니",
       "id": "15b3"
     },
     {
       "name": "국민 카드",
+      "nickname": "주머니",
       "id": "fe6e"
     },
     {
       "name": "신한 카드",
+      "nickname": "주머니",
       "id": "27d7"
     },
     {
       "name": "카카오 카드",
+      "nickname": "포켓보이 중원",
       "id": "f38c"
     },
     {
       "name": "카카오 페이",
+      "nickname": "포켓보이 중원",
       "id": "4e87"
     },
     {
       "name": "네이버 페이",
+      "nickname": "포켓보이 중원",
       "id": "dfad"
     },
     {
       "id": "bb2a",
+      "nickname": "포켓보이 중원",
       "name": "토스"
+    },
+    {
+      "id": "d105",
+      "name": "기업카드",
+      "nickname": "주머니"
     }
   ],
   "categories": [
     {
       "name": "월급",
       "color": "#ffc0cb",
+      "nickname": "포켓보이 중원",
       "id": "42ee"
     },
     {
       "name": "식비",
       "color": "#a68edc",
+      "nickname": "포켓보이 중원",
       "id": "42d4"
     },
     {
       "name": "교통비",
       "color": "#4d84c4",
+      "nickname": "포켓보이 중원",
       "id": "ae7e"
     },
     {
       "name": "여가비",
       "color": "#95ccc1",
+      "nickname": "포켓보이 중원",
       "id": "870e"
     },
     {
       "name": "카페비",
       "color": "#ffe4e1",
+      "nickname": "주머니",
       "id": "cd79"
     },
     {
       "name": "통신비",
       "color": "#d2a3d9",
+      "nickname": "주머니",
       "id": "b253"
     },
     {
       "name": "고정지출",
       "color": "#87e8dc",
+      "nickname": "주머니",
       "id": "4cf7"
     },
     {
       "name": "용돈",
       "color": "#4ade80",
+      "nickname": "주머니",
       "id": "4f57"
     },
     {
       "id": "4931",
       "name": "패스트푸드",
+      "nickname": "주머니",
       "color": "#a635d0"
     }
   ],

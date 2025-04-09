@@ -5,11 +5,12 @@ import axios from 'axios';
 export const useCategoriesStore = defineStore('categories', () => {
   const categories = ref([]);
   const error = ref(null);
+  const nickname = localStorage.getItem('nickname');
 
   const fetchCategories = async () => {
     try {
       const response = await axios.get('http://localhost:3000/categories');
-      categories.value = response.data;
+      categories.value = response.data.filter((t) => t.nickname === nickname);
     } catch (err) {
       error.value = err;
     }
@@ -19,13 +20,17 @@ export const useCategoriesStore = defineStore('categories', () => {
     try {
       const response = await axios.post(
         'http://localhost:3000/categories',
-        newCategory,
+        {
+          ...newCategory,
+          nickname: nickname,
+        },
         {
           headers: {
             'Content-Type': 'application/json',
           },
         }
       );
+      console.log('분류 생성 성공', response);
     } catch (error) {
       console.log('에러: ', error);
     }
