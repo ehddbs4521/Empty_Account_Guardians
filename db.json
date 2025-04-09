@@ -582,6 +582,26 @@
       "description": "ㅇㅇㅇㅇㅇㅇ",
       "paytype": "현금",
       "amount": 100000000000
+    },
+    {
+      "id": "49",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "카페비",
+      "date": "2025-04-09",
+      "description": "ㅎㅎ",
+      "amount": 123456,
+      "expense_type": "지출"
+    },
+    {
+      "id": "50",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "카페비",
+      "date": "2025-04-09",
+      "description": "ㅓㅓ",
+      "amount": 123456,
+      "expense_type": "수입"
     }
   ]
 }
