@@ -46,16 +46,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import RegisterModal from "@/pages/RegisterModal.vue";
-import axios from "axios";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import RegisterModal from '@/pages/RegisterModal.vue';
+import axios from 'axios';
+import { useUserStore } from '@/stores/user';
 
-const email = ref("");
-const password = ref("");
+const email = ref('');
+const password = ref('');
 const showPassword = ref(false);
 const showRegister = ref(false);
 const router = useRouter();
+const userStore = useUserStore();
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
@@ -64,22 +66,23 @@ const togglePassword = () => {
 const handleLogin = async () => {
   if (email.value && password.value) {
     try {
-      const { data: users } = await axios.get("http://localhost:3000/users");
+      const { data: users } = await axios.get('http://localhost:3000/users');
 
       const user = users.find(
         (u) => u.email === email.value && u.password === password.value
       );
 
       if (user) {
-        localStorage.setItem("nickname", user.nickname);
+        localStorage.setItem('nickname', user.nickname);
         alert(`로그인 성공: ${user.nickname}`);
-        router.push("/home");
+        userStore.setNickname(user.nickname);
+        router.push('/home');
       } else {
-        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
       }
     } catch (error) {
       console.error(error);
-      alert("로그인 처리 중 오류가 발생했습니다.");
+      alert('로그인 처리 중 오류가 발생했습니다.');
     }
   }
 };
