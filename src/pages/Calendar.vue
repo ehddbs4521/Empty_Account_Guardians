@@ -159,6 +159,15 @@ const calendarOptions = {
   },
 };
 
+// yearMonth 변경 시, FullCalendar의 이벤트를 갱신
+watch(
+  () => yearMonth.value, // yearMonth 값이 변경될 때마다
+  () => {
+    const api = calendarRef.value?.getApi?.(); // calendarRef를 통해 FullCalendar API 가져오기
+    if (api) api.refetchEvents(); // 이벤트를 다시 가져옵니다.
+  }
+);
+
 watch(
   () => transactions.value,
   () => {
