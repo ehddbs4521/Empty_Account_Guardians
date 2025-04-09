@@ -1,325 +1,364 @@
 <template>
   <div class="calendar-wrapper">
-    <FullCalendar :options="calendarOptions" />
+    <div class="day-header">
+      <div v-for="day in days" :key="day" class="day-label">
+        {{ day }}
+      </div>
+    </div>
 
-    <div v-if="isModalOpen" class="modal-popup">
-      <div class="modal-content">
+    <FullCalendar
+      :options="calendarOptions"
+      ref="calendarRef"
+      class="calendar-content"
+    />
+
+    <div v-if="showPopup" class="popup-overlay" @click.self="showPopup = false">
+      <div class="popup-content">
+        <button class="close-button" @click="showPopup = false">×</button>
+
         <h3>{{ selectedDate }} 거래 내역</h3>
-        <ul v-if="selectedTransactions.length" class="transaction-list">
-          <li
-            v-for="(item, index) in selectedTransactions"
-            :key="index"
-            class="transaction-item"
+        <div
+          v-if="selectedTransactions.length > 0"
+          v-for="tx in selectedTransactions"
+          :key="tx.id"
+          class="popup-item"
+        >
+          <span
+            class="category-badge"
+            :style="{
+              backgroundColor: getCategoryColor(tx.category, tx.nickname),
+            }"
           >
+            {{ tx.category }}
+          </span>
+          <span class="desc">{{ tx.description }}</span>
+          <span :class="tx.expense_type === '수입' ? 'income' : 'expense'">
+            {{ tx.expense_type === "수입" ? "+" : "-" }}
+            {{ Number(tx.amount).toLocaleString() }}
+          </span>
+        </div>
+        <p v-else>거래 내역이 없습니다.</p>
+
+        <div v-if="selectedTransactions.length > 0" class="popup-total">
+          <div>
+            <span class="total-label net">총 합:</span>
             <span
-              class="badge"
-              :style="{
-                backgroundColor: item.categoryColor,
-                color: '#fff',
-                textShadow: '0 0 1px #000, 0 0 1px #000, 0 0 1px #000',
-              }"
+              class="total-value net"
+              :style="{ color: netTotal >= 0 ? '#1abc9c' : '#e74c3c' }"
             >
-              {{ item.category }}
+              {{ netTotal >= 0 ? "+" : "-"
+              }}{{ Math.abs(netTotal).toLocaleString() }}
             </span>
-            <span class="description">{{ item.description }}</span>
-            <span
-              class="amount"
-              :class="
-                item.expense_type === '수입'
-                  ? 'amount-income'
-                  : 'amount-expense'
-              "
-            >
-              {{ item.expense_type === '수입' ? '+' : '-'
-              }}{{ item.amount.toLocaleString() }}
-            </span>
-          </li>
-        </ul>
-        <p v-else>해당 날짜에 거래 내역이 없습니다.</p>
-        <button @click="closeModal">닫기</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watchEffect, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import FullCalendar from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import koLocale from '@fullcalendar/core/locales/ko';
-import { useTransactionStore } from '@/stores/transaction';
+import { ref, inject, computed, watch, onMounted } from "vue";
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
-const route = useRoute();
-const router = useRouter();
-const transactionStore = useTransactionStore();
+const calendarRef = ref(null);
+const days = ["일", "월", "화", "수", "목", "금", "토"];
 
-const initialMonth = ref(
-  route.query.month || new Date().toISOString().slice(0, 7)
-);
-const initialDate = ref(`${initialMonth.value}-01`);
-
-const selectedDate = ref(null);
-const isModalOpen = ref(false);
-const selectedTransactions = ref([]);
+const transactions = inject("transactions", ref([]));
 const categories = ref([]);
+const yearMonth = "2025-04";
 
-const fetchCategories = async () => {
-  const res = await fetch('http://localhost:3000/categories');
-  categories.value = await res.json();
-};
+const showPopup = ref(false);
+const selectedDate = ref("");
+const selectedTransactions = computed(() =>
+  transactions.value.filter((tx) => tx.date === selectedDate.value)
+);
 
-const getCategoryColor = (categoryName) => {
-  const found = categories.value.find((c) => c.name === categoryName);
-  return found?.color || '#ccc';
-};
+function getCategoryColor(categoryName, nickname) {
+  const found = categories.value.find(
+    (c) => c.name === categoryName && c.nickname === nickname
+  );
+  return found?.color || "#ccc";
+}
 
-const openModal = (date) => {
-  selectedDate.value = date;
-  selectedTransactions.value = transactionStore.transactions
-    .filter((t) => t.date === date)
-    .map((t) => ({
-      ...t,
-      categoryColor: getCategoryColor(t.category),
-    }));
-  isModalOpen.value = true;
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-  selectedDate.value = null;
-  selectedTransactions.value = [];
-};
-
-const getParsedYearMonth = () => {
-  const text = document.querySelector('.fc-toolbar-title')?.textContent?.trim();
-  const match = text?.match(/(\d{4})년\s*(\d{1,2})월/);
-  return match ? `${match[1]}-${match[2].padStart(2, '0')}` : null;
-};
-
-watchEffect(() => {
-  const currentMonth = route.query.month || initialMonth.value;
-  // transactionStore.fetchTransactions(currentMonth);
+onMounted(async () => {
+  try {
+    const res = await fetch("http://localhost:3000/categories");
+    categories.value = await res.json();
+  } catch (err) {
+    console.error("카테고리 불러오기 실패:", err);
+  }
 });
 
-onMounted(() => {
-  fetchCategories();
-});
+const totalIncome = computed(() =>
+  selectedTransactions.value
+    .filter((tx) => tx.expense_type === "수입")
+    .reduce((sum, tx) => sum + Number(tx.amount), 0)
+);
+
+const totalExpense = computed(() =>
+  selectedTransactions.value
+    .filter((tx) => tx.expense_type === "지출")
+    .reduce((sum, tx) => sum + Number(tx.amount), 0)
+);
+
+const netTotal = computed(() => totalIncome.value - totalExpense.value);
 
 const calendarEvents = computed(() => {
-  const grouped = transactionStore.transactions.reduce(
-    (acc, { date, expense_type, amount }) => {
-      if (!acc[date]) acc[date] = { income: 0, expense: 0 };
-      if (expense_type === '수입') acc[date].income += Number(amount);
-      else if (expense_type === '지출') acc[date].expense += Number(amount);
-      return acc;
-    },
-    {}
+  const filtered = transactions.value.filter((tx) =>
+    tx.date?.startsWith?.(yearMonth)
   );
 
+  const grouped = {};
+  filtered.forEach((tx) => {
+    const date = tx.date;
+    if (!grouped[date]) grouped[date] = { income: 0, expense: 0 };
+
+    const amount = Number(tx.amount);
+    if (tx.expense_type === "지출") grouped[date].expense += amount;
+    else if (tx.expense_type === "수입") grouped[date].income += amount;
+  });
+
   return Object.entries(grouped).map(([date, { income, expense }]) => ({
-    title: `수입 ${income.toLocaleString()}원\n지출 ${expense.toLocaleString()}원`,
-    date,
+    title: "",
+    start: date,
+    extendedProps: {
+      income: `+${income.toLocaleString()}`,
+      expense: `-${expense.toLocaleString()}`,
+    },
+    classNames: ["custom-event"],
   }));
 });
 
-const calendarOptions = computed(() => ({
+const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
-  locale: koLocale,
-  initialView: 'dayGridMonth',
-  initialDate: initialDate.value,
-  events: calendarEvents.value,
-  eventDisplay: 'block',
-  fixedWeekCount: true,
-  aspectRatio: 1.3,
-  height: 'auto',
-  dateClick(info) {
-    const clickedDate = info.dateStr;
-    const hasData = transactionStore.transactions.some(
-      (t) => t.date === clickedDate
-    );
-    if (hasData) openModal(clickedDate);
+  initialView: "dayGridMonth",
+  headerToolbar: false,
+  dayHeaders: false,
+  height: "auto",
+  events(fetchInfo, successCallback) {
+    successCallback(calendarEvents.value);
+  },
+  eventContent({ event }) {
+    const { income, expense } = event.extendedProps;
+    return {
+      html: `
+        <div class="event-line income">${income}</div>
+        <div class="event-line expense">${expense}</div>
+      `,
+    };
   },
   eventClick(info) {
-    openModal(info.event.startStr);
+    selectedDate.value = info.event.startStr;
+    showPopup.value = true;
   },
-  datesSet() {
-    const currentMonth = getParsedYearMonth();
-    if (currentMonth) {
-      router.replace({ query: { ...route.query, month: currentMonth } });
-    }
-  },
-  eventDidMount(info) {
-    const el = info.el;
-    const [incomeText, expenseText] = info.event.title.split('\n');
+};
 
-    el.style.backgroundColor = 'transparent';
-    el.style.border = 'none';
-    el.style.cursor = 'pointer';
-    el.classList.add('hoverable-event');
-
-    el.innerHTML = `
-        <div style="color: #007bff">${incomeText}</div>
-        <div style="color: #dc3545">${expenseText}</div>
-      `;
+watch(
+  () => transactions.value,
+  () => {
+    const api = calendarRef.value?.getApi?.();
+    if (api) api.refetchEvents();
   },
-}));
+  { deep: true }
+);
 </script>
 
-<style>
+<style scoped>
 .calendar-wrapper {
-  height: 100vh;
-  padding: 0 10px;
-  box-sizing: border-box;
-  overflow-y: auto;
+  max-width: 900px;
+  margin: auto;
+  margin-top: 20px;
 }
 
-.fc-daygrid-event {
+.day-header {
+  display: flex;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  padding: 12px 0;
+  margin-bottom: 10px;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.day-label {
+  flex: 1;
+  text-align: center;
+  font-size: 15px;
+  color: #333;
+}
+
+::v-deep .fc {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+::v-deep .fc-scrollgrid {
+  border: 2px solid #ccc !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+::v-deep .fc-daygrid-day-frame {
+  padding: 6px;
+}
+
+::v-deep .fc-daygrid-day {
+  height: 120px;
+  vertical-align: top;
+  border: 1px solid #919191;
+}
+
+::v-deep .fc-daygrid-day-number {
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+  display: block;
+  margin-bottom: 4px;
+}
+
+::v-deep .fc-daygrid-day-events {
+  font-size: 13px;
+}
+
+::v-deep .fc-event.custom-event {
   background: none !important;
   border: none !important;
-  white-space: pre-line;
-  font-size: 0.9rem;
-  padding: 0 !important;
+  padding: 0;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.1s ease;
 }
 
-.hoverable-event:hover {
-  filter: brightness(1.15);
+::v-deep .fc-event.custom-event:hover {
+  transform: scale(1.05);
 }
 
-.fc-daygrid-day-frame {
-  min-height: 100px;
+::v-deep .event-line.income {
+  color: #1abc9c !important;
+}
+
+::v-deep .event-line.expense {
+  color: #e74c3c !important;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  padding: 32px 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-width: 500px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
 }
 
-.fc-daygrid-day-top {
-  flex-shrink: 0;
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.2s ease;
 }
 
-.fc-daygrid-day-events {
-  flex-grow: 1;
-  overflow-y: auto;
+.close-button:hover {
+  color: #333;
 }
 
-.fc-theme-standard td,
-.fc-theme-standard th {
-  border: 1px solid #999 !important;
+.popup-content h3 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
-.fc .fc-col-header-cell-cushion,
-.fc .fc-daygrid-day-number {
-  color: #7c7b7b !important;
-}
-
-@media (max-width: 768px) {
-  .fc-daygrid-day-frame {
-    min-height: 70px;
-  }
-
-  .fc-daygrid-event {
-    font-size: 0.7rem;
-  }
-
-  .fc-toolbar-title {
-    font-size: 1.2rem !important;
-  }
-
-  .fc-daygrid-day-number {
-    font-size: 0.75rem !important;
-  }
-}
-
-.modal-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2000;
-  width: 90%;
-  max-width: 520px;
-  background-color: white;
-  border: 2px solid #666;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  box-sizing: border-box;
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 28px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 460px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.modal-content h3 {
-  font-size: 1.6rem;
-  margin-bottom: 24px;
-  color: #222;
-  text-align: center;
-}
-
-.transaction-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-}
-
-.transaction-item {
+.popup-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
-  gap: 16px;
-  font-size: 1.2rem;
+  font-size: 14px;
+  padding: 10px 0;
+  gap: 10px;
 }
 
-.badge {
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-size: 1.2rem;
+.category-badge {
+  font-size: 12px;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-right: 8px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.income {
+  color: #1abc9c;
   font-weight: bold;
-  white-space: nowrap;
-  color: #333;
-  display: inline-block;
-  flex-shrink: 0;
 }
 
-.description {
+.expense {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.desc {
   flex: 1;
-  font-size: 1.2rem;
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 14px;
+  margin-left: 4px;
+  margin-right: 8px;
 }
 
-.amount {
+.popup-total {
+  border-top: 1px solid #ddd;
+  padding-top: 16px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 14px;
+}
+
+.total-label {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.total-value {
   font-weight: bold;
-  font-size: 1.3rem;
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 
-.amount-income {
-  color: #2e8b57;
+.total-value.income {
+  color: #1abc9c;
 }
 
-.amount-expense {
-  color: #c0392b;
+.total-value.expense {
+  color: #e74c3c;
 }
 
-.modal-content button {
-  display: block;
-  margin: 28px auto 0;
-  padding: 12px 24px;
-  font-size: 1.1rem;
-  background: #f4f4f4;
-  border: 1px solid #333;
-  border-radius: 6px;
-  cursor: pointer;
+.total-value.net {
+  color: #333;
+  font-weight: 700;
 }
 </style>

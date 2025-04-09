@@ -72,7 +72,7 @@
           <td>{{ item.description }}</td>
           <td>{{ item.paytype }}</td>
           <td>
-            {{ item.expense_type === '수입' ? '+' : '-'
+            {{ item.expense_type === "수입" ? "+" : "-"
             }}{{ item.amount.toLocaleString() }}원
           </td>
           <td>{{ item.date }}</td>
@@ -127,12 +127,18 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, watch, onBeforeUnmount, inject } from 'vue';
-import { useTransactionStore } from '@/stores/transaction.js';
-import { useCategoriesStore } from '@/stores/useCategoriesStore';
-import FilterModal from './FilterModal.vue';
-import EditTransactionModal from './EditTransactionModal.vue';
-import { useDateStore } from '@/stores/date.js';
+import { ref, computed, onMounted, watch, onBeforeUnmount, inject } from "vue";
+import { useTransactionStore } from "@/stores/transaction.js";
+import { useCategoriesStore } from "@/stores/useCategoriesStore";
+import FilterModal from "./FilterModal.vue";
+import EditTransactionModal from "./EditTransactionModal.vue";
+import { useDateStore } from "@/stores/date.js";
+import { ref, computed, onMounted, watch, onBeforeUnmount, inject } from "vue";
+import { useTransactionStore } from "@/stores/transaction.js";
+import { useCategoriesStore } from "@/stores/useCategoriesStore";
+import FilterModal from "./FilterModal.vue";
+import EditTransactionModal from "./EditTransactionModal.vue";
+import { useDateStore } from "@/stores/date.js";
 const store = useTransactionStore();
 const categoryStore = useCategoriesStore();
 const isModal = ref(false);
@@ -140,10 +146,10 @@ const isEditModal = ref(false);
 const showOptionIndex = ref(null);
 
 // const transactions = computed(() => store.transactions);
-const transactions = inject('transactions');
+const transactions = inject("transactions");
 const totalcount = computed(() => filteredTransactions.value.length);
 
-const selectedType = ref('all');
+const selectedType = ref("all");
 
 // 수입 지출 체크박스
 const showIncome = ref(true);
@@ -151,15 +157,15 @@ const showExpense = ref(true);
 
 const totalincome = computed(() => {
   return transactions.value
-    .filter((item) => item.expense_type === '수입')
+    .filter((item) => item.expense_type === "수입")
     .reduce((sum, item) => sum + Number(item.amount), 0); // 여기도!
 });
 const totalexpenditure = computed(() => {
   return transactions.value
-    .filter((item) => item.expense_type === '지출')
+    .filter((item) => item.expense_type === "지출")
     .reduce((sum, item) => sum + Number(item.amount), 0); // 여기!
 });
-const sortType = ref('desc');
+const sortType = ref("desc");
 const changeModal = () => {
   isModal.value = true;
 };
@@ -190,18 +196,18 @@ const filteredTransactions = computed(() => {
 
   // 수입/지출 필터
   list = list.filter((item) => {
-    if (item.expense_type === '수입' && showIncome.value) return true;
-    if (item.expense_type === '지출' && showExpense.value) return true;
+    if (item.expense_type === "수입" && showIncome.value) return true;
+    if (item.expense_type === "지출" && showExpense.value) return true;
     return false;
   });
 
   // 카테고리/결제수단 필터
   const selectedCategories = appliedFilters.value
-    .filter((f) => f.type === 'category')
+    .filter((f) => f.type === "category")
     .map((f) => f.name);
 
   const selectedPaytypes = appliedFilters.value
-    .filter((f) => f.type === 'paytype')
+    .filter((f) => f.type === "paytype")
     .map((f) => f.name);
 
   if (selectedCategories.length > 0) {
@@ -216,9 +222,9 @@ const filteredTransactions = computed(() => {
 
 const paginatedTransactions = computed(() => {
   let list = [...filteredTransactions.value];
-  if (sortType.value === 'desc') {
+  if (sortType.value === "desc") {
     list.sort((a, b) => new Date(b.date) - new Date(a.date));
-  } else if (sortType.value === 'asc') {
+  } else if (sortType.value === "asc") {
     list.sort((a, b) => new Date(a.date) - new Date(b.date));
   }
 
@@ -257,7 +263,7 @@ const removeFilter = (filter) => {
 
 //아이템 삭제
 const handleDelete = (id) => {
-  if (confirm('정말 삭제하시겠습니까?')) {
+  if (confirm("정말 삭제하시겠습니까?")) {
     store.deleteTransaction(id);
   }
 };
@@ -267,7 +273,7 @@ const getCategoryColor = (categoryName) => {
   const category = categoryStore.categories.find(
     (c) => c.name === categoryName
   );
-  return category ? category.color : '#007bff';
+  return category ? category.color : "#007bff";
 };
 
 //수정하기
@@ -278,8 +284,8 @@ const openEditModal = (transaction) => {
 };
 
 const handleClickOutside = (event) => {
-  const optionPopups = document.querySelectorAll('.option-popup');
-  const optionIcons = document.querySelectorAll('.fa-ellipsis-vertical');
+  const optionPopups = document.querySelectorAll(".option-popup");
+  const optionIcons = document.querySelectorAll(".fa-ellipsis-vertical");
 
   let clickedInsidePopupOrIcon = false;
 
@@ -301,11 +307,11 @@ const handleClickOutside = (event) => {
 };
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
+  document.addEventListener("click", handleClickOutside);
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 <style scoped>
