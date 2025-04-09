@@ -127,7 +127,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, watch, onBeforeUnmount, inject } from 'vue';
 import { useTransactionStore } from '@/stores/transaction.js';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import FilterModal from './FilterModal.vue';
@@ -139,7 +139,8 @@ const isModal = ref(false);
 const isEditModal = ref(false);
 const showOptionIndex = ref(null);
 
-const transactions = computed(() => store.transactions);
+// const transactions = computed(() => store.transactions);
+const transactions = inject('transactions');
 const totalcount = computed(() => filteredTransactions.value.length);
 
 const selectedType = ref('all');
@@ -167,16 +168,16 @@ const toggleOption = (index) => {
 };
 
 // 월별 이동 시, 데이터 로딩
-const dateStore = useDateStore();
-watch(
-  () => dateStore.currentDate,
-  (newDate) => {
-    const year = newDate.getFullYear();
-    const month = String(newDate.getMonth() + 1).padStart(2, '0');
-    store.fetchTransactions(`${year}-${month}`);
-  },
-  { immediate: true }
-);
+// const dateStore = useDateStore();
+// watch(
+//   () => dateStore.currentDate,
+//   (newDate) => {
+//     const year = newDate.getFullYear();
+//     const month = String(newDate.getMonth() + 1).padStart(2, '0');
+//     // store.fetchTransactions(`${year}-${month}`);
+//   },
+//   { immediate: true }
+// );
 
 // 페이지 네이션
 

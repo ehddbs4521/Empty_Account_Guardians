@@ -524,16 +524,6 @@
       "expense_type": "지출"
     },
     {
-      "id": "43",
-      "nickname": "주머니",
-      "paytype": "카카오 카드",
-      "category": "여가비",
-      "date": "2025-04-01",
-      "description": "ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ",
-      "amount": 10000,
-      "expense_type": "수입"
-    },
-    {
       "id": "44",
       "nickname": "주머니",
       "paytype": "토스",
