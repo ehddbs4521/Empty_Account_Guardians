@@ -5,12 +5,12 @@ import axios from 'axios';
 export const usePaytypesStore = defineStore('paytypes', () => {
   const paytypes = ref([]);
   const error = ref(null);
+  const nickname = localStorage.getItem('nickname');
 
   const fetchPaytypes = async () => {
     try {
       const response = await axios.get('http://localhost:3000/paytypes');
-      //   console.log('response', response);
-      paytypes.value = response.data;
+      paytypes.value = response.data.filter((t) => t.nickname === nickname);
     } catch (err) {
       error.value = err;
     }
@@ -20,13 +20,17 @@ export const usePaytypesStore = defineStore('paytypes', () => {
     try {
       const response = await axios.post(
         'http://localhost:3000/paytypes',
-        newPaytype,
+        {
+          ...newPaytype,
+          nickname: nickname,
+        },
         {
           headers: {
             'Content-Type': 'application/json',
           },
         }
       );
+      console.log('결제수단 생성 성공', response);
     } catch (error) {
       console.log('지불방법 추가 중 오류: ', error);
     }

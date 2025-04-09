@@ -213,7 +213,7 @@ const paginatedTransactions = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
 
-  console.log('list: ', list);
+  // console.log('list: ', list);
 
   return list.slice(start, end);
 });
