@@ -1,21 +1,22 @@
 <template>
+  <br />
+  <div class="toggle-wrapper">
+    <button
+      :class="{ active: selectedType === '지출' }"
+      @click="updateChart('지출')"
+    >
+      지출
+    </button>
+    <button
+      :class="{ active: selectedType === '수입' }"
+      @click="updateChart('수입')"
+    >
+      수입
+    </button>
+  </div>
   <div class="container">
     <div class="layout-wrapper">
       <!-- 왼쪽: 원형 차트 -->
-      <div class="toggle-wrapper">
-        <button
-          :class="{ active: selectedType === '지출' }"
-          @click="updateChart('지출')"
-        >
-          지출
-        </button>
-        <button
-          :class="{ active: selectedType === '수입' }"
-          @click="updateChart('수입')"
-        >
-          수입
-        </button>
-      </div>
       <div class="pie-chart-wrapper">
         <canvas ref="chartRef"></canvas>
       </div>
@@ -47,21 +48,7 @@
   </div>
   <!-- line chart -->
   <div class="container">
-    <div class="layout-wrapper2">
-      <div class="toggle-wrapper">
-        <button
-          :class="{ active: selectedType === '지출' }"
-          @click="updateChart('지출')"
-        >
-          지출
-        </button>
-        <button
-          :class="{ active: selectedType === '수입' }"
-          @click="updateChart('수입')"
-        >
-          수입
-        </button>
-      </div>
+    <div class="layout-wrapper">
       <div class="line-chart-wrapper">
         <canvas id="lineChart"></canvas>
       </div>
@@ -77,12 +64,76 @@ const chartRef = ref(null);
 const currentMonth = ref(new Date().getMonth() + 1);
 const selectedType = ref('지출');
 const pieChart = ref(null);
+const lineChart = ref(null);
 const transactions = ref([]);
 const labels = ref([]);
 const colors = ref([]);
 const percentages = ref([]);
 const amounts = ref([]);
 const total = ref(0);
+
+const drawLineChart = async (type) => {
+  const transactionRes = await fetch('http://localhost:3000/transactions');
+  const transactionsData = await transactionRes.json();
+
+  const now = new Date();
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}`;
+    months.push({
+      label: `${d.getFullYear()}년 ${d.getMonth() + 1}월`,
+      key,
+      total: 0,
+    });
+  }
+
+  const filtered = transactionsData.filter((t) => t.expense_type === type);
+  filtered.forEach((t) => {
+    const date = new Date(t.date);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}`;
+    const month = months.find((m) => m.key === key);
+    if (month) {
+      month.total += t.amount;
+    }
+  });
+
+  const lineLabels = months.map((m) => m.label);
+  const lineData = months.map((m) => m.total);
+
+  const ctx = document.getElementById('lineChart').getContext('2d');
+  if (lineChart.value) lineChart.value.destroy();
+  lineChart.value = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: lineLabels,
+      datasets: [
+        {
+          label: `월별 ${type}`,
+          data: lineData,
+          fill: false,
+          borderColor:
+            type === '지출' ? 'rgba(255,99,132)' : 'rgba(54, 162, 235)',
+          tension: 0.3,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+};
 
 const updateChart = async (type) => {
   selectedType.value = type;
@@ -124,7 +175,6 @@ const updateChart = async (type) => {
     };
   });
 
-  // 퍼센트 기준으로 내림차순 정렬
   combined.sort((a, b) => b.percentage - a.percentage);
 
   const rawColors = rawLabels.map((label) => {
@@ -159,72 +209,73 @@ const updateChart = async (type) => {
       },
     },
   });
+  await drawLineChart(type);
 };
 
 onMounted(async () => {
   await nextTick();
   await updateChart('지출'); // pie chart
 
-  const transactionRes = await fetch('http://localhost:3000/transactions');
-  const transactions = await transactionRes.json();
+  // const transactionRes = await fetch('http://localhost:3000/transactions');
+  // const transactions = await transactionRes.json();
 
-  // line chart
-  const now = new Date();
-  const months = [];
-  for (let i = 5; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}`;
-    months.push({
-      label: `${d.getFullYear()}년 ${d.getMonth() + 1}월`,
-      key,
-      total: 0,
-    });
-  }
+  // // line chart
+  // const now = new Date();
+  // const months = [];
+  // for (let i = 5; i >= 0; i--) {
+  //   const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  //   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+  //     2,
+  //     '0'
+  //   )}`;
+  //   months.push({
+  //     label: `${d.getFullYear()}년 ${d.getMonth() + 1}월`,
+  //     key,
+  //     total: 0,
+  //   });
+  // }
 
-  const expenses2 = transactions.filter((t) => t.expense_type === '지출');
-  expenses2.forEach((t) => {
-    const date = new Date(t.date);
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}`;
-    const month = months.find((m) => m.key === key);
-    if (month) {
-      month.total += t.amount;
-    }
-  });
+  // const expenses2 = transactions.filter((t) => t.expense_type === '지출');
+  // expenses2.forEach((t) => {
+  //   const date = new Date(t.date);
+  //   const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+  //     2,
+  //     '0'
+  //   )}`;
+  //   const month = months.find((m) => m.key === key);
+  //   if (month) {
+  //     month.total += t.amount;
+  //   }
+  // });
 
-  const lineLabels = months.map((m) => m.label);
-  const lineData = months.map((m) => m.total);
+  // const lineLabels = months.map((m) => m.label);
+  // const lineData = months.map((m) => m.total);
 
-  const ctx2 = document.getElementById('lineChart').getContext('2d');
+  // const ctx2 = document.getElementById('lineChart').getContext('2d');
 
-  new Chart(ctx2, {
-    type: 'line',
-    data: {
-      labels: lineLabels,
-      datasets: [
-        {
-          label: '월별 지출',
-          data: lineData,
-          fill: false,
-          borderColor: 'rgba(75, 192, 192)',
-          tension: 0.3,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
+  // new Chart(ctx2, {
+  //   type: 'line',
+  //   data: {
+  //     labels: lineLabels,
+  //     datasets: [
+  //       {
+  //         label: '월별 지출',
+  //         data: lineData,
+  //         fill: false,
+  //         borderColor: 'rgba(75, 192, 192)',
+  //         tension: 0.3,
+  //       },
+  //     ],
+  //   },
+  //   options: {
+  //     responsive: true,
+  //     scales: {
+  //       y: {
+  //         beginAtZero: true,
+  //       },
+  //     },
+  //   },
+  // });
 });
 
 console.log(transactions);
@@ -244,17 +295,6 @@ console.log(transactions);
   justify-content: center;
   align-items: flex-start;
   gap: 40px;
-  padding: 40px 20px;
-  max-width: 1000px;
-  margin: 0 auto; /* 가운데 정렬 */
-  box-sizing: border-box;
-}
-.layout-wrapper2 {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 40px;
-
   padding: 40px 20px;
   max-width: 1000px;
   margin: 0 auto; /* 가운데 정렬 */
@@ -322,8 +362,8 @@ td {
 }
 
 .toggle-wrapper {
-  text-align: center;
-  margin-bottom: 20px;
+  text-align: left;
+  margin: 20px auto 20px 120px;
 }
 
 .toggle-wrapper button {
@@ -337,7 +377,7 @@ td {
 }
 
 .toggle-wrapper button.active {
-  background-color: #3bc9db;
+  background-color: #fcbf4e;
   color: white;
 }
 </style>
