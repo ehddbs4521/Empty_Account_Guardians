@@ -109,6 +109,12 @@
       "name": "패스트푸드",
       "nickname": "주머니",
       "color": "#a635d0"
+    },
+    {
+      "id": "caff",
+      "name": "욜로비",
+      "color": "#fe6039",
+      "nickname": "포켓보이 중원"
     }
   ],
   "transactions": [
@@ -591,6 +597,106 @@
       "date": "2025-04-09",
       "description": "ㅓㅓ",
       "amount": 123456,
+      "expense_type": "수입"
+    },
+    {
+      "id": "51",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "월급이당",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "52",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "ㅇㅇㅇ",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "53",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "ㅇㅇㅇ",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "54",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "월급이당",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "55",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "월급이당",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "56",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "ㅇㅇ",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "57",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "ㅇㅇㅇ",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "58",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "ㅇㅇㅇ",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "59",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "ㅇㅇㅇ",
+      "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "60",
+      "nickname": "포켓보이 중원",
+      "paytype": "카카오 카드",
+      "category": "월급",
+      "date": "2025-04-09",
+      "description": "ㄹㄹㄹ",
+      "amount": 5000,
       "expense_type": "수입"
     }
   ]
