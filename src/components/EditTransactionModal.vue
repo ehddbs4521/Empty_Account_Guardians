@@ -1,13 +1,17 @@
 <template>
   <div class="modal">
     <div class="box">
-      <div class="filterbox" style="background-color: #fcbf4e; width: 100%">
-        <i class="fa-solid fa-x"></i>
+      <div class="filterbox d-flex d-flex flex-row-reverse" style="width: 100%">
+        <i
+          class="fa-solid fa-x"
+          style="color: black"
+          @click="emit('closeEditModal')"
+        ></i>
       </div>
       <div>
         <button
           type="button"
-          class="btn rounded-pill px-4"
+          class="btn rounded-pill px-4 me-2"
           :class="
             selectedType === '수입' ? 'btn-warning' : 'btn-outline-warning'
           "
@@ -76,9 +80,9 @@
         />
       </div>
 
-      <div>
+      <div class="button-group mt-3">
         <button class="submitbtn me-2" @click="handleSave">저장</button>
-        <button class="cancelbtn" @click="emit('closeEditModal')">취소</button>
+        <!-- <button class="cancelbtn" @click="emit('closeEditModal')">취소</button> -->
       </div>
     </div>
   </div>
@@ -169,7 +173,7 @@ const handleSave = async () => {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 중앙 → 왼쪽 정렬로 변경 */
+  align-items: flex-start;
   justify-content: center;
 
   position: absolute;
@@ -179,12 +183,12 @@ const handleSave = async () => {
   background-color: white;
   border: solid 1px gray;
   width: 500px;
-  padding: 20px; /* 여백 추가 */
+  padding: 20px;
   gap: 1rem; /* 요소 사이 간격 */
 }
 
 .box > div {
-  width: 100%; /* 각 입력 섹션이 전체 너비 사용 */
+  width: 100%;
 }
 .filterbox {
   border-radius: 10px 10px 0 0;
@@ -209,18 +213,34 @@ const handleSave = async () => {
   font-weight: bold;
 }
 .selected {
-  /* background-color: #fcbf4e; */
-  /* color: white; */
   border-color: #fcbf4e;
 }
 i {
   color: #fcbf4e;
+  cursor: pointer;
+}
+.button-group {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.submitbtn,
+.cancelbtn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 8px;
 }
 .submitbtn {
-  border: none;
   background-color: #fcbf4e;
+  color: white;
+  border: none;
 }
+
 .cancelbtn {
+  background-color: #eee;
+  color: black;
   border: none;
 }
 </style>
