@@ -33,7 +33,7 @@
           </span>
           <span class="desc">{{ tx.description }}</span>
           <span :class="tx.expense_type === '수입' ? 'income' : 'expense'">
-            {{ tx.expense_type === '수입' ? '+' : '-' }}
+            {{ tx.expense_type === "수입" ? "+" : "-" }}
             {{ Number(tx.amount).toLocaleString() }}
           </span>
         </div>
@@ -46,7 +46,7 @@
               class="total-value net"
               :style="{ color: netTotal >= 0 ? '#1abc9c' : '#e74c3c' }"
             >
-              {{ netTotal >= 0 ? '+' : '-'
+              {{ netTotal >= 0 ? "+" : "-"
               }}{{ Math.abs(netTotal).toLocaleString() }}
             </span>
           </div>
@@ -57,24 +57,24 @@
 </template>
 
 <script setup>
-import { ref, inject, computed, watch, onMounted } from 'vue';
-import FullCalendar from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import { useDateStore } from '@/stores/date';
+import { ref, inject, computed, watch, onMounted } from "vue";
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { useDateStore } from "@/stores/date";
 
 const dateStore = useDateStore();
 
 const calendarRef = ref(null);
-const days = ['일', '월', '화', '수', '목', '금', '토'];
+const days = ["일", "월", "화", "수", "목", "금", "토"];
 
-const transactions = inject('transactions', ref([]));
+const transactions = inject("transactions", ref([]));
 const categories = ref([]);
 const yearMonth = computed(() => dateStore.formattedDate);
-console.log('yearMonth:', yearMonth);
+console.log("yearMonth:", yearMonth.value);
 
 const showPopup = ref(false);
-const selectedDate = ref('');
+const selectedDate = ref("");
 const selectedTransactions = computed(() =>
   transactions.value.filter((tx) => tx.date === selectedDate.value)
 );
@@ -83,27 +83,27 @@ function getCategoryColor(categoryName, nickname) {
   const found = categories.value.find(
     (c) => c.name === categoryName && c.nickname === nickname
   );
-  return found?.color || '#ccc';
+  return found?.color || "#ccc";
 }
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:3000/categories');
+    const res = await fetch("http://localhost:3000/categories");
     categories.value = await res.json();
   } catch (err) {
-    console.error('카테고리 불러오기 실패:', err);
+    console.error("카테고리 불러오기 실패:", err);
   }
 });
 
 const totalIncome = computed(() =>
   selectedTransactions.value
-    .filter((tx) => tx.expense_type === '수입')
+    .filter((tx) => tx.expense_type === "수입")
     .reduce((sum, tx) => sum + Number(tx.amount), 0)
 );
 
 const totalExpense = computed(() =>
   selectedTransactions.value
-    .filter((tx) => tx.expense_type === '지출')
+    .filter((tx) => tx.expense_type === "지출")
     .reduce((sum, tx) => sum + Number(tx.amount), 0)
 );
 
@@ -120,27 +120,27 @@ const calendarEvents = computed(() => {
     if (!grouped[date]) grouped[date] = { income: 0, expense: 0 };
 
     const amount = Number(tx.amount);
-    if (tx.expense_type === '지출') grouped[date].expense += amount;
-    else if (tx.expense_type === '수입') grouped[date].income += amount;
+    if (tx.expense_type === "지출") grouped[date].expense += amount;
+    else if (tx.expense_type === "수입") grouped[date].income += amount;
   });
 
   return Object.entries(grouped).map(([date, { income, expense }]) => ({
-    title: '',
+    title: "",
     start: date,
     extendedProps: {
       income: `+${income.toLocaleString()}`,
       expense: `-${expense.toLocaleString()}`,
     },
-    classNames: ['custom-event'],
+    classNames: ["custom-event"],
   }));
 });
 
 const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
-  initialView: 'dayGridMonth',
+  initialView: "dayGridMonth",
   headerToolbar: false,
   dayHeaders: false,
-  height: 'auto',
+  height: "auto",
   events(fetchInfo, successCallback) {
     successCallback(calendarEvents.value);
   },
@@ -161,10 +161,15 @@ const calendarOptions = {
 
 // yearMonth 변경 시, FullCalendar의 이벤트를 갱신
 watch(
-  () => yearMonth.value, // yearMonth 값이 변경될 때마다
+  () => yearMonth.value,
   () => {
-    const api = calendarRef.value?.getApi?.(); // calendarRef를 통해 FullCalendar API 가져오기
-    if (api) api.refetchEvents(); // 이벤트를 다시 가져옵니다.
+    const api = calendarRef.value?.getApi?.();
+    if (api) {
+      // yearMonth는 '2025-03' 형식이라고 가정
+      const dateStr = `${yearMonth.value}-01`;
+      api.gotoDate(dateStr); // 날짜 이동
+      api.refetchEvents(); // 이벤트 갱신
+    }
   }
 );
 
