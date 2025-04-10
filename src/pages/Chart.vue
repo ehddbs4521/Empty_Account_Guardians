@@ -20,10 +20,10 @@
       </div>
 
       <div class="list-wrapper">
-        <h2>
+        <div class="fw-bold fs-5" style="margin: 10px auto 10px 20px">
           {{ selectedMonth }}월 총 <span>{{ selectedType }}</span> 금액
           <span class="fw-bold">{{ total.toLocaleString() }}</span>
-        </h2>
+        </div>
         <table>
           <tbody>
             <tr v-for="(label, index) in labels" :key="label">
@@ -301,6 +301,7 @@ onMounted(async () => {
 }
 .layout-wrapper {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
   gap: 40px;
@@ -310,8 +311,9 @@ onMounted(async () => {
   box-sizing: border-box;
 }
 .pie-chart-wrapper {
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
   flex-shrink: 0;
 }
 
