@@ -1,5 +1,4 @@
 <template>
-  <br />
   <div class="toggle-wrapper">
     <button
       :class="{ active: selectedType === '지출' }"
@@ -16,14 +15,15 @@
   </div>
   <div class="container">
     <div class="layout-wrapper">
-      <!-- 왼쪽: 원형 차트 -->
       <div class="pie-chart-wrapper">
-        <canvas ref="chartRef"></canvas>
+        <canvas ref="pieChartRef"></canvas>
       </div>
 
-      <!-- 오른쪽: 카테고리 리스트 -->
       <div class="list-wrapper">
-        <h2>{{ currentMonth }}월 총 지출 금액 {{ total.toLocaleString() }}</h2>
+        <h2>
+          {{ selectedMonth }}월 총 <span>{{ selectedType }}</span> 금액
+          <span class="fw-bold">{{ total.toLocaleString() }}</span>
+        </h2>
         <table>
           <tbody>
             <tr v-for="(label, index) in labels" :key="label">
@@ -50,36 +50,141 @@
   <div class="container">
     <div class="layout-wrapper">
       <div class="line-chart-wrapper">
-        <canvas id="lineChart"></canvas>
+        <canvas ref="lineChartRef"></canvas>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from 'vue';
+import { onMounted, ref, inject, watch, nextTick, computed } from 'vue';
 import { Chart } from 'chart.js/auto';
+import { useDateStore } from '@/stores/date';
 
-const chartRef = ref(null);
-const currentMonth = ref(new Date().getMonth() + 1);
+const dateStore = useDateStore();
+const yearMonth = computed(() => dateStore.formattedDate);
+const selectedYear = computed(() =>
+  parseInt(yearMonth.value.split('-')[0], 10)
+);
+const selectedMonth = computed(() =>
+  parseInt(yearMonth.value.split('-')[1], 10)
+);
+
+watch([selectedYear, selectedMonth], () => {
+  updateChart(selectedType.value);
+});
+
 const selectedType = ref('지출');
 const pieChart = ref(null);
 const lineChart = ref(null);
-const transactions = ref([]);
 const labels = ref([]);
 const colors = ref([]);
 const percentages = ref([]);
 const amounts = ref([]);
 const total = ref(0);
+const pieChartRef = ref(null);
+const lineChartRef = ref(null);
+
+const userTransactions = inject('transactions');
+if (!userTransactions) {
+  console.warn('userTransactions 주입 실패!');
+}
+
+const updateChart = (type) => {
+  selectedType.value = type;
+  drawPieChart(type);
+  drawLineChart(type);
+};
+
+const drawPieChart = async (type) => {
+  if (!pieChartRef.value) return;
+
+  const transactions = userTransactions.value;
+
+  // fetch 카테고리 메타 정보
+  const categoryRes = await fetch('http://localhost:3000/categories');
+  const categoryMeta = await categoryRes.json();
+
+  // selectedYear & selectedMonth에 맞는 거래만 필터링
+  const filtered = transactions.filter((t) => {
+    const date = new Date(t.date);
+    return (
+      t.expense_type === type &&
+      date.getFullYear() === selectedYear.value &&
+      date.getMonth() + 1 === selectedMonth.value
+    );
+  });
+
+  // 카테고리별 합산
+  const categoryTotals = {};
+  filtered.forEach((t) => {
+    categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+  });
+
+  const rawLabels = Object.keys(categoryTotals);
+  const rawData = Object.values(categoryTotals);
+  total.value = rawData.reduce((sum, value) => sum + value, 0);
+
+  const combined = rawLabels
+    .map((label, i) => {
+      const color =
+        categoryMeta.find((cat) => cat.name === label)?.color || '#cccccc';
+      const value = rawData[i];
+      return {
+        label,
+        amount: value,
+        color,
+        percentage: (value / total.value) * 100,
+      };
+    })
+    .sort((a, b) => b.percentage - a.percentage);
+
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedData = combined.map((item) => item.amount);
+  const sortedColors = combined.map((item) => item.color);
+
+  labels.value = sortedLabels;
+  amounts.value = sortedData;
+  colors.value = sortedColors;
+  percentages.value = combined.map((item) => item.percentage);
+
+  // 차트 생성
+  const ctx = pieChartRef.value.getContext('2d');
+  if (pieChart.value) {
+    pieChart.value.destroy();
+  }
+
+  pieChart.value = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: sortedLabels,
+      datasets: [
+        {
+          label: `${type} 금액`,
+          data: sortedData,
+          backgroundColor: sortedColors,
+          hoverOffset: 6,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+      },
+    },
+  });
+};
 
 const drawLineChart = async (type) => {
-  const transactionRes = await fetch('http://localhost:3000/transactions');
-  const transactionsData = await transactionRes.json();
+  if (!lineChartRef.value) {
+    return;
+  }
+  const transactions = userTransactions.value;
 
-  const now = new Date();
   const months = [];
   for (let i = 5; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const d = new Date(selectedYear.value, selectedMonth.value - 1 - i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
       2,
       '0'
@@ -91,7 +196,7 @@ const drawLineChart = async (type) => {
     });
   }
 
-  const filtered = transactionsData.filter((t) => t.expense_type === type);
+  const filtered = transactions.filter((t) => t.expense_type === type);
   filtered.forEach((t) => {
     const date = new Date(t.date);
     const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
@@ -103,12 +208,12 @@ const drawLineChart = async (type) => {
       month.total += t.amount;
     }
   });
-
   const lineLabels = months.map((m) => m.label);
   const lineData = months.map((m) => m.total);
 
-  const ctx = document.getElementById('lineChart').getContext('2d');
+  const ctx = lineChartRef.value.getContext('2d');
   if (lineChart.value) lineChart.value.destroy();
+
   lineChart.value = new Chart(ctx, {
     type: 'line',
     data: {
@@ -135,150 +240,21 @@ const drawLineChart = async (type) => {
   });
 };
 
-const updateChart = async (type) => {
-  selectedType.value = type;
-
-  const transactionRes = await fetch('http://localhost:3000/transactions');
-  transactions.value = await transactionRes.json();
-
-  const categoryRes = await fetch('http://localhost:3000/categories');
-  const categoryMeta = await categoryRes.json();
-
-  const filtered = transactions.value.filter((t) => {
-    const date = new Date(t.date);
-    return (
-      t.expense_type === type && date.getMonth() + 1 === currentMonth.value
-    );
-  });
-
-  const categoryTotals = {};
-  filtered.forEach((t) => {
-    if (!categoryTotals[t.category]) {
-      categoryTotals[t.category] = 0;
+watch(
+  () => userTransactions.value,
+  (val) => {
+    if (val && val.length > 0) {
+      updateChart(selectedType.value);
     }
-    categoryTotals[t.category] += t.amount;
-  });
-
-  const rawLabels = Object.keys(categoryTotals);
-  const rawData = Object.values(categoryTotals);
-  total.value = rawData.reduce((sum, value) => sum + value, 0);
-
-  const combined = rawLabels.map((label, i) => {
-    const color =
-      categoryMeta.find((cat) => cat.name === label)?.color || '#cccccc';
-    const value = rawData[i];
-    return {
-      label,
-      amount: value,
-      color,
-      percentage: (value / total.value) * 100,
-    };
-  });
-
-  combined.sort((a, b) => b.percentage - a.percentage);
-
-  const rawColors = rawLabels.map((label) => {
-    const found = categoryMeta.find((cat) => cat.name === label);
-    return found ? found.color : '#cccccc';
-  });
-
-  labels.value = combined.map((item) => item.label);
-  amounts.value = combined.map((item) => item.amount);
-  colors.value = combined.map((item) => item.color);
-  percentages.value = combined.map((item) => item.percentage);
-
-  const ctx1 = chartRef.value.getContext('2d');
-  if (pieChart.value) pieChart.value.destroy();
-  pieChart.value = new Chart(ctx1, {
-    type: 'pie',
-    data: {
-      labels: rawLabels,
-      datasets: [
-        {
-          label: `${type} 금액`,
-          data: rawData,
-          backgroundColor: rawColors,
-          hoverOffset: 6,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
-  await drawLineChart(type);
-};
+  },
+  { immediate: true }
+);
 
 onMounted(async () => {
   await nextTick();
-  await updateChart('지출'); // pie chart
 
-  // const transactionRes = await fetch('http://localhost:3000/transactions');
-  // const transactions = await transactionRes.json();
-
-  // // line chart
-  // const now = new Date();
-  // const months = [];
-  // for (let i = 5; i >= 0; i--) {
-  //   const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-  //   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
-  //     2,
-  //     '0'
-  //   )}`;
-  //   months.push({
-  //     label: `${d.getFullYear()}년 ${d.getMonth() + 1}월`,
-  //     key,
-  //     total: 0,
-  //   });
-  // }
-
-  // const expenses2 = transactions.filter((t) => t.expense_type === '지출');
-  // expenses2.forEach((t) => {
-  //   const date = new Date(t.date);
-  //   const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-  //     2,
-  //     '0'
-  //   )}`;
-  //   const month = months.find((m) => m.key === key);
-  //   if (month) {
-  //     month.total += t.amount;
-  //   }
-  // });
-
-  // const lineLabels = months.map((m) => m.label);
-  // const lineData = months.map((m) => m.total);
-
-  // const ctx2 = document.getElementById('lineChart').getContext('2d');
-
-  // new Chart(ctx2, {
-  //   type: 'line',
-  //   data: {
-  //     labels: lineLabels,
-  //     datasets: [
-  //       {
-  //         label: '월별 지출',
-  //         data: lineData,
-  //         fill: false,
-  //         borderColor: 'rgba(75, 192, 192)',
-  //         tension: 0.3,
-  //       },
-  //     ],
-  //   },
-  //   options: {
-  //     responsive: true,
-  //     scales: {
-  //       y: {
-  //         beginAtZero: true,
-  //       },
-  //     },
-  //   },
-  // });
+  await updateChart(selectedType.value);
 });
-
-console.log(transactions);
 </script>
 
 <style scoped>
@@ -363,7 +339,7 @@ td {
 
 .toggle-wrapper {
   text-align: left;
-  margin: 20px auto 20px 120px;
+  margin: 40px auto 20px 120px;
 }
 
 .toggle-wrapper button {
@@ -379,5 +355,9 @@ td {
 .toggle-wrapper button.active {
   background-color: #fcbf4e;
   color: white;
+}
+canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>
