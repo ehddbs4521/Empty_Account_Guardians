@@ -76,7 +76,10 @@ const handleLogin = async () => {
         localStorage.setItem('nickname', user.nickname);
         alert(`로그인 성공: ${user.nickname}`);
         userStore.setNickname(user.nickname);
-        router.push('/home');
+        // router.push('/home');
+        router.push('/home').then(() => {
+          location.reload(); // <- 새로고침!
+        });
       } else {
         alert('아이디 또는 비밀번호가 올바르지 않습니다.');
       }

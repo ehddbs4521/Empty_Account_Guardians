@@ -39,11 +39,12 @@ export const useTransactionStore = defineStore('transaction', () => {
 
       // 현재 월 기준 데이터 다시 필터링해서 보여줄 용도
       const nickname = localStorage.getItem('nickname');
-      transactions.value = allData.filter(
-        (t) =>
-          t.date.startsWith(newTransaction.date.slice(0, 7)) &&
-          t.nickname === nickname
-      );
+      transactions.value = allData.filter((t) => t.nickname === nickname);
+      // transactions.value = allData.filter(
+      //   (t) =>
+      //     t.date.startsWith(newTransaction.date.slice(0, 7)) &&
+      //     t.nickname === nickname
+      // );
 
       // 새 트랜잭션 생성
       const transactionWithId = {
@@ -65,6 +66,7 @@ export const useTransactionStore = defineStore('transaction', () => {
 
       // 현재 리스트에 추가
       transactions.value.push(postResponse.data);
+      transactions.value = [...transactions.value];
     } catch (err) {
       error.value = err.message;
     }
