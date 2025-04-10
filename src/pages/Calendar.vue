@@ -80,11 +80,13 @@ const selectedTransactions = computed(() =>
   transactions.value.filter((tx) => tx.date === selectedDate.value)
 );
 
-function getCategoryColor(categoryName) {
+function getCategoryColor(categoryName, nickname) {
   const normalizedCategory = categoryName?.trim().toLowerCase();
-
+  const normalizedNickname = nickname?.trim().toLowerCase();
   const found = categories.value.find(
-    (c) => c.name?.trim().toLowerCase() === normalizedCategory
+    (c) =>
+      c.name?.trim().toLowerCase() === normalizedCategory &&
+      c.nickname?.trim().toLowerCase() === normalizedNickname
   );
 
   if (!found) {
