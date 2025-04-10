@@ -208,6 +208,7 @@ const drawPieChart = async (type) => {
   });
 };
 
+// line chart
 const drawLineChart = async (type) => {
   if (!lineChartRef.value) {
     return;
