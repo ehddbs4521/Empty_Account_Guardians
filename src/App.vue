@@ -1,13 +1,13 @@
 <template>
   <Header />
-  <router-view></router-view>
+  <router-view :key="$route.fullPath"></router-view>
 </template>
 
 <script setup>
-import { provide, ref, watch } from "vue";
-import Header from "./components/Header.vue";
-import { useTransactionStore } from "./stores/transaction";
-import { useUserStore } from "./stores/user";
+import { provide, ref, watch } from 'vue';
+import Header from './components/Header.vue';
+import { useTransactionStore } from './stores/transaction';
+import { useUserStore } from './stores/user';
 
 const transactions = ref([]);
 const transactionStore = useTransactionStore();
@@ -34,7 +34,7 @@ watch(
 );
 
 // provide로 전달
-provide("transactions", transactions);
+provide('transactions', transactions);
 </script>
 
 <style scoped></style>

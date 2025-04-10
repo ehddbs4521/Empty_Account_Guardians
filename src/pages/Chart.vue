@@ -90,16 +90,40 @@ if (!userTransactions) {
   console.warn('userTransactions 주입 실패!');
 }
 
-const updateChart = (type) => {
+const updateChart = async (type) => {
+  // transactions 로딩 대기
+  if (!userTransactions.value || userTransactions.value.length === 0) {
+    console.warn('거래 데이터가 아직 로드되지 않았습니다. 대기 중...');
+
+    // wait until loaded
+    const unwatch = watch(
+      () => userTransactions.value,
+      async (val) => {
+        if (val && val.length > 0) {
+          unwatch(); // 한 번만 감시
+          selectedType.value = type;
+          await drawPieChart(type);
+          await drawLineChart(type);
+        }
+      }
+    );
+    return;
+  }
+
   selectedType.value = type;
-  drawPieChart(type);
-  drawLineChart(type);
+  await drawPieChart(type);
+  await drawLineChart(type);
 };
 
 const drawPieChart = async (type) => {
   if (!pieChartRef.value) return;
 
   const transactions = userTransactions.value;
+  if (!transactions || transactions.length === 0) {
+    console.warn('거래 내역이 비어 있습니다.');
+    return;
+  }
+
   const userNickname = transactions[0].nickname;
   console.log('nickname : ' + userNickname);
 
@@ -260,8 +284,9 @@ watch(
 
 onMounted(async () => {
   await nextTick();
-
-  await updateChart(selectedType.value);
+  if (userTransactions.value && userTransactions.value.length > 0) {
+    await updateChart(selectedType.value);
+  }
 });
 </script>
 
