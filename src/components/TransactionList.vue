@@ -150,12 +150,12 @@ const showIncome = ref(true);
 const showExpense = ref(true);
 
 const totalincome = computed(() => {
-  return transactions.value
+  return filteredTransactions.value
     .filter((item) => item.expense_type === '수입')
     .reduce((sum, item) => sum + Number(item.amount), 0); // 여기도!
 });
 const totalexpenditure = computed(() => {
-  return transactions.value
+  return filteredTransactions.value
     .filter((item) => item.expense_type === '지출')
     .reduce((sum, item) => sum + Number(item.amount), 0); // 여기!
 });
