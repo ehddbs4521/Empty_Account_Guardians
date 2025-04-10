@@ -123,7 +123,7 @@
       "nickname": "주머니",
       "paytype": "현금",
       "category": "월급",
-      "date": "2025-03-03",
+      "date": "2025-03-31",
       "description": "돈받음 ㅠㅋㅋㅋㅋ",
       "amount": 100000000,
       "expense_type": "수입"
@@ -542,12 +542,12 @@
     {
       "id": "45",
       "nickname": "주머니",
-      "paytype": "국민 카드",
-      "category": "교통비",
+      "expense_type": "지출",
       "date": "2025-04-28",
+      "category": "교통비",
       "description": "버스",
-      "amount": 3000,
-      "expense_type": "지출"
+      "paytype": "신한 카드",
+      "amount": 3000
     },
     {
       "id": "46",
@@ -697,6 +697,26 @@
       "date": "2025-04-09",
       "description": "ㄹㄹㄹ",
       "amount": 5000,
+      "expense_type": "수입"
+    },
+    {
+      "id": "61",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "고정지출",
+      "date": "2025-02-12",
+      "description": "ㅋㅋㅋㅋ",
+      "amount": 10000,
+      "expense_type": "지출"
+    },
+    {
+      "id": "63",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "용돈",
+      "date": "2025-02-13",
+      "description": "ㅇㅇ",
+      "amount": 100000,
       "expense_type": "수입"
     }
   ]

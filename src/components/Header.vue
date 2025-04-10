@@ -84,29 +84,12 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
 import { useDateStore } from '@/stores/date';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 const router = useRouter();
 const dateStore = useDateStore();
 const userStore = useUserStore();
-
-const currentDate = ref(new Date());
-const displayedMonth = computed(() => currentDate.value.getMonth() + 1);
-const displayedYear = computed(() => currentDate.value.getFullYear());
-
-const prevMonth = () => {
-  const date = new Date(currentDate.value);
-  date.setMonth(date.getMonth() - 1);
-  currentDate.value = date;
-};
-
-const nextMonth = () => {
-  const date = new Date(currentDate.value);
-  date.setMonth(date.getMonth() + 1);
-  currentDate.value = date;
-};
 
 const handleLogout = () => {
   userStore.logout();

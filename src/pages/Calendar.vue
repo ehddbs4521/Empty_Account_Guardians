@@ -61,13 +61,17 @@ import { ref, inject, computed, watch, onMounted } from "vue";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { useDateStore } from "@/stores/date";
+
+const dateStore = useDateStore();
 
 const calendarRef = ref(null);
 const days = ["일", "월", "화", "수", "목", "금", "토"];
 
 const transactions = inject("transactions", ref([]));
 const categories = ref([]);
-const yearMonth = "2025-04";
+const yearMonth = computed(() => dateStore.formattedDate);
+console.log("yearMonth:", yearMonth.value);
 
 const showPopup = ref(false);
 const selectedDate = ref("");
@@ -107,9 +111,9 @@ const netTotal = computed(() => totalIncome.value - totalExpense.value);
 
 const calendarEvents = computed(() => {
   const filtered = transactions.value.filter((tx) =>
-    tx.date?.startsWith?.(yearMonth)
+    tx.date?.startsWith?.(yearMonth.value)
   );
-
+  // console.log('filtered:', filtered);
   const grouped = {};
   filtered.forEach((tx) => {
     const date = tx.date;
@@ -154,6 +158,20 @@ const calendarOptions = {
     showPopup.value = true;
   },
 };
+
+// yearMonth 변경 시, FullCalendar의 이벤트를 갱신
+watch(
+  () => yearMonth.value,
+  () => {
+    const api = calendarRef.value?.getApi?.();
+    if (api) {
+      // yearMonth는 '2025-03' 형식이라고 가정
+      const dateStr = `${yearMonth.value}-01`;
+      api.gotoDate(dateStr); // 날짜 이동
+      api.refetchEvents(); // 이벤트 갱신
+    }
+  }
+);
 
 watch(
   () => transactions.value,
