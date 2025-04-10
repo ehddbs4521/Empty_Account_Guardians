@@ -91,7 +91,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { usePaytypesStore } from '@/stores/usePaytypesStore';
-import { useTransactionStore } from '@/stores/transaction.js';
+import { useTransactionStore } from '@/stores/useTransaction.js';
 
 const store = useTransactionStore();
 

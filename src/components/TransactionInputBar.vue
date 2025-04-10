@@ -116,7 +116,7 @@ import { onMounted, ref, watch, computed } from 'vue';
 import AddCategoryModal from './AddCategoryModal.vue';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { usePaytypesStore } from '@/stores/usePaytypesStore';
-import { useTransactionStore } from '@/stores/transaction';
+import { useTransactionStore } from '@/stores/useTransaction';
 
 const emit = defineEmits(['incomeAnimationShow', 'outcomeAnimationShow']);
 

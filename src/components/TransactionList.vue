@@ -128,7 +128,7 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, watch, onBeforeUnmount, inject } from 'vue';
-import { useTransactionStore } from '@/stores/transaction.js';
+import { useTransactionStore } from '@/stores/useTransaction.js';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import FilterModal from './FilterModal.vue';
 import EditTransactionModal from './EditTransactionModal.vue';
