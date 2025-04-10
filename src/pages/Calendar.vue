@@ -33,7 +33,7 @@
           </span>
           <span class="desc">{{ tx.description }}</span>
           <span :class="tx.expense_type === '수입' ? 'income' : 'expense'">
-            {{ tx.expense_type === "수입" ? "+" : "-" }}
+            {{ tx.expense_type === '수입' ? '+' : '-' }}
             {{ Number(tx.amount).toLocaleString() }}
           </span>
         </div>
@@ -46,7 +46,7 @@
               class="total-value net"
               :style="{ color: netTotal >= 0 ? '#1abc9c' : '#e74c3c' }"
             >
-              {{ netTotal >= 0 ? "+" : "-" }}
+              {{ netTotal >= 0 ? '+' : '-' }}
               {{ Math.abs(netTotal).toLocaleString() }}
             </span>
           </div>
@@ -57,24 +57,24 @@
 </template>
 
 <script setup>
-import { ref, inject, computed, watch, onMounted } from "vue";
-import FullCalendar from "@fullcalendar/vue3";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import { useDateStore } from "@/stores/date";
+import { ref, inject, computed, watch, onMounted } from 'vue';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { useDateStore } from '@/stores/date';
 
 const dateStore = useDateStore();
 const calendarRef = ref(null);
-const days = ["일", "월", "화", "수", "목", "금", "토"];
+const days = ['일', '월', '화', '수', '목', '금', '토'];
 
-const transactions = inject("transactions", ref([]));
+const transactions = inject('transactions', ref([]));
 const categories = ref([]);
 const categoriesLoaded = ref(false);
 
 const yearMonth = computed(() => dateStore.formattedDate);
 
 const showPopup = ref(false);
-const selectedDate = ref("");
+const selectedDate = ref('');
 
 const selectedTransactions = computed(() =>
   transactions.value.filter((tx) => tx.date === selectedDate.value)
@@ -90,31 +90,31 @@ function getCategoryColor(categoryName, nickname) {
   );
 
   if (!found) {
-    console.warn("❗ 카테고리 색상 매칭 실패:", { categoryName });
+    console.warn('❗ 카테고리 색상 매칭 실패:', { categoryName });
   }
 
-  return found?.color || "#ccc";
+  return found?.color || '#ccc';
 }
 
 onMounted(async () => {
   try {
-    const res = await fetch("http://localhost:3000/categories");
+    const res = await fetch('http://localhost:3000/categories');
     categories.value = await res.json();
     categoriesLoaded.value = true;
   } catch (err) {
-    console.error("카테고리 불러오기 실패:", err);
+    console.error('카테고리 불러오기 실패:', err);
   }
 });
 
 const totalIncome = computed(() =>
   selectedTransactions.value
-    .filter((tx) => tx.expense_type === "수입")
+    .filter((tx) => tx.expense_type === '수입')
     .reduce((sum, tx) => sum + Number(tx.amount), 0)
 );
 
 const totalExpense = computed(() =>
   selectedTransactions.value
-    .filter((tx) => tx.expense_type === "지출")
+    .filter((tx) => tx.expense_type === '지출')
     .reduce((sum, tx) => sum + Number(tx.amount), 0)
 );
 
@@ -129,27 +129,27 @@ const calendarEvents = computed(() => {
     const date = tx.date;
     if (!grouped[date]) grouped[date] = { income: 0, expense: 0 };
     const amount = Number(tx.amount);
-    if (tx.expense_type === "지출") grouped[date].expense += amount;
-    else if (tx.expense_type === "수입") grouped[date].income += amount;
+    if (tx.expense_type === '지출') grouped[date].expense += amount;
+    else if (tx.expense_type === '수입') grouped[date].income += amount;
   });
 
   return Object.entries(grouped).map(([date, { income, expense }]) => ({
-    title: "",
+    title: '',
     start: date,
     extendedProps: {
       income: `+${income.toLocaleString()}`,
       expense: `-${expense.toLocaleString()}`,
     },
-    classNames: ["custom-event"],
+    classNames: ['custom-event'],
   }));
 });
 
 const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
-  initialView: "dayGridMonth",
+  initialView: 'dayGridMonth',
   headerToolbar: false,
   dayHeaders: false,
-  height: "auto",
+  height: 'auto',
   events(fetchInfo, successCallback) {
     successCallback(calendarEvents.value);
   },
