@@ -120,7 +120,7 @@ import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { usePaytypesStore } from '@/stores/usePaytypesStore';
 import { useTransactionStore } from '@/stores/transaction';
 
-const emit = defineEmits(['incomeGifShow']);
+const emit = defineEmits(['incomeAnimationShow', 'outcomeAnimationShow']);
 
 const selectedType = ref('지출');
 const date = ref(new Date().toISOString().slice(0, 10));
@@ -199,9 +199,9 @@ const addTransaction = async () => {
   await transactionStore.addTransaction(newTransaction);
 
   if (selectedType.value === '수입') {
-    emit('incomeGifShow');
+    emit('incomeAnimationShow');
   } else {
-    emit('outcomeGifShow');
+    emit('outcomeAnimationShow');
   }
 
   // 초기화 일부
