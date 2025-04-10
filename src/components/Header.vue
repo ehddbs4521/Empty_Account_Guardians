@@ -1,5 +1,5 @@
 <template>
-  <div class="header-container pb-3">
+  <div class="header-container pb-3" v-if="userStore.nickname">
     <div class="header-content">
       <!-- 왼쪽 -->
       <div class="left">
