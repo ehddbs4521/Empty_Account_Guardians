@@ -153,6 +153,13 @@
       "color": "#fbf556",
       "nickname": "주머니",
       "expense_type": "지출"
+    },
+    {
+      "id": "7d82",
+      "name": "문화비",
+      "color": "#ff6c47",
+      "expense_type": "지출",
+      "nickname": "포켓보이 중원"
     }
   ],
   "transactions": [

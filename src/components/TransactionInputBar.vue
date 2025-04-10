@@ -44,10 +44,7 @@
         <div class="col pe-2">
           <label class="form-label fw-semibold mb-3">분류</label>
           <select v-model="category" class="form-select">
-            <option
-              v-for="(item, index) in categoriesStore.categories"
-              :key="index"
-            >
+            <option v-for="(item, index) in filteredCategories" :key="index">
               {{ item.name }}
             </option>
             <option value="__add__">+ 분류 추가하기</option>
@@ -108,13 +105,14 @@
     <AddCategoryModal
       v-if="showAddCategory"
       :type="addMode"
+      :selected-type="selectedType"
       @close="handleCategoryClose"
     />
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import AddCategoryModal from './AddCategoryModal.vue';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { usePaytypesStore } from '@/stores/usePaytypesStore';
@@ -140,7 +138,8 @@ onMounted(async () => {
   await categoriesStore.fetchCategories();
   await paytypesStore.fetchPaytypes();
 
-  category.value = categoriesStore.categories[0]?.name || '';
+  console.log(categoriesStore.categories);
+  category.value = filteredCategories.value[0]?.name || '';
   paymentMethod.value = paytypesStore.paytypes[0]?.name || '';
 });
 
@@ -208,6 +207,19 @@ const addTransaction = async () => {
   description.value = '';
   amount.value = '';
 };
+
+const filteredCategories = computed(() => {
+  return categoriesStore.categories.filter(
+    (item) => item.expense_type === selectedType.value
+  );
+});
+
+watch(selectedType, () => {
+  const firstCategory = categoriesStore.categories.find(
+    (item) => item.expense_type === selectedType.value
+  );
+  category.value = firstCategory?.name || '';
+});
 </script>
 
 <style scoped>

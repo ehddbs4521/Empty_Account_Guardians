@@ -53,6 +53,10 @@ const props = defineProps({
     type: String,
     required: true, // 'category' or 'payment'
   },
+  selectedType: {
+    type: String,
+    required: true,
+  },
 });
 
 const categoriesStore = useCategoriesStore();
@@ -69,6 +73,7 @@ const submitCategory = async () => {
     const newCategory = {
       name: categoryName.value.trim(),
       color: selectedColor.value,
+      expense_type: props.selectedType,
     };
     // console.log('추가할 카테고리:', newCategory);
     await categoriesStore.addCategory(newCategory);
