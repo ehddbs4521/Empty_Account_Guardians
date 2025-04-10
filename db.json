@@ -682,6 +682,36 @@
       "description": "엄마가 용돈 줌",
       "amount": 100000,
       "expense_type": "수입"
+    },
+    {
+      "id": "64",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "카페비",
+      "date": "2025-04-09",
+      "description": "ssss",
+      "amount": 12344,
+      "expense_type": "지출"
+    },
+    {
+      "id": "65",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "통신비",
+      "date": "2025-04-09",
+      "description": "123",
+      "amount": 123,
+      "expense_type": "지출"
+    },
+    {
+      "id": "66",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "통신비",
+      "date": "2025-04-09",
+      "description": "qwer",
+      "amount": 124235,
+      "expense_type": "지출"
     }
   ]
 }

@@ -152,12 +152,12 @@ const showExpense = ref(true);
 const totalincome = computed(() => {
   return filteredTransactions.value
     .filter((item) => item.expense_type === '수입')
-    .reduce((sum, item) => sum + Number(item.amount), 0); // 여기도!
+    .reduce((sum, item) => sum + Number(item.amount), 0);
 });
 const totalexpenditure = computed(() => {
   return filteredTransactions.value
     .filter((item) => item.expense_type === '지출')
-    .reduce((sum, item) => sum + Number(item.amount), 0); // 여기!
+    .reduce((sum, item) => sum + Number(item.amount), 0);
 });
 const sortType = ref('desc');
 const changeModal = () => {
