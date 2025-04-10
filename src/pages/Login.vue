@@ -48,7 +48,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import RegisterModal from '@/pages/RegisterModal.vue';
+import RegisterModal from '@/components/RegisterModal.vue';
 import axios from 'axios';
 import { useUserStore } from '@/stores/user';
 
