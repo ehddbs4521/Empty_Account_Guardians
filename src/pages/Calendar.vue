@@ -18,7 +18,7 @@
 
         <h3>{{ selectedDate }} 거래 내역</h3>
         <div
-          v-if="selectedTransactions.length > 0"
+          v-if="selectedTransactions.length > 0 && categoriesLoaded"
           v-for="tx in selectedTransactions"
           :key="tx.id"
           class="popup-item"
@@ -46,8 +46,8 @@
               class="total-value net"
               :style="{ color: netTotal >= 0 ? '#1abc9c' : '#e74c3c' }"
             >
-              {{ netTotal >= 0 ? "+" : "-"
-              }}{{ Math.abs(netTotal).toLocaleString() }}
+              {{ netTotal >= 0 ? "+" : "-" }}
+              {{ Math.abs(netTotal).toLocaleString() }}
             </span>
           </div>
         </div>
@@ -64,25 +64,33 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { useDateStore } from "@/stores/date";
 
 const dateStore = useDateStore();
-
 const calendarRef = ref(null);
 const days = ["일", "월", "화", "수", "목", "금", "토"];
 
 const transactions = inject("transactions", ref([]));
 const categories = ref([]);
+const categoriesLoaded = ref(false);
+
 const yearMonth = computed(() => dateStore.formattedDate);
-console.log("yearMonth:", yearMonth.value);
 
 const showPopup = ref(false);
 const selectedDate = ref("");
+
 const selectedTransactions = computed(() =>
   transactions.value.filter((tx) => tx.date === selectedDate.value)
 );
 
-function getCategoryColor(categoryName, nickname) {
+function getCategoryColor(categoryName) {
+  const normalizedCategory = categoryName?.trim().toLowerCase();
+
   const found = categories.value.find(
-    (c) => c.name === categoryName && c.nickname === nickname
+    (c) => c.name?.trim().toLowerCase() === normalizedCategory
   );
+
+  if (!found) {
+    console.warn("❗ 카테고리 색상 매칭 실패:", { categoryName });
+  }
+
   return found?.color || "#ccc";
 }
 
@@ -90,6 +98,7 @@ onMounted(async () => {
   try {
     const res = await fetch("http://localhost:3000/categories");
     categories.value = await res.json();
+    categoriesLoaded.value = true;
   } catch (err) {
     console.error("카테고리 불러오기 실패:", err);
   }
@@ -113,12 +122,10 @@ const calendarEvents = computed(() => {
   const filtered = transactions.value.filter((tx) =>
     tx.date?.startsWith?.(yearMonth.value)
   );
-  // console.log('filtered:', filtered);
   const grouped = {};
   filtered.forEach((tx) => {
     const date = tx.date;
     if (!grouped[date]) grouped[date] = { income: 0, expense: 0 };
-
     const amount = Number(tx.amount);
     if (tx.expense_type === "지출") grouped[date].expense += amount;
     else if (tx.expense_type === "수입") grouped[date].income += amount;
@@ -159,16 +166,14 @@ const calendarOptions = {
   },
 };
 
-// yearMonth 변경 시, FullCalendar의 이벤트를 갱신
 watch(
   () => yearMonth.value,
   () => {
     const api = calendarRef.value?.getApi?.();
     if (api) {
-      // yearMonth는 '2025-03' 형식이라고 가정
       const dateStr = `${yearMonth.value}-01`;
-      api.gotoDate(dateStr); // 날짜 이동
-      api.refetchEvents(); // 이벤트 갱신
+      api.gotoDate(dateStr);
+      api.refetchEvents();
     }
   }
 );
@@ -184,6 +189,7 @@ watch(
 </script>
 
 <style scoped>
+/* 동일한 스타일 유지 */
 .calendar-wrapper {
   max-width: 900px;
   margin: auto;
@@ -215,7 +221,7 @@ watch(
 }
 
 ::v-deep .fc-scrollgrid {
-  border: 2px solid #ccc !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
   border-radius: 16px !important;
   overflow: hidden;
 }
@@ -227,7 +233,7 @@ watch(
 ::v-deep .fc-daygrid-day {
   height: 120px;
   vertical-align: top;
-  border: 1px solid #919191;
+  border: 1px solid #cfcfcf;
 }
 
 ::v-deep .fc-daygrid-day-number {
