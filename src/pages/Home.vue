@@ -1,15 +1,11 @@
 <template>
   <div class="container position-relative">
     <TransactionInputBar
-      @incomeGifShow="triggerAnimation('income')"
-      @outcomeGifShow="triggerGif('outcomeGifShow')"
+      @incomeAnimationShow="triggerAnimation('income')"
+      @outcomeAnimationShow="triggerAnimation('expense')"
     />
     <TransactionList />
 
-    <!-- GIF 모달 -->
-    <!-- <div v-if="showGifModal" class="gif-modal">
-      <img :src="gifSrc" alt="Transaction Gif" class="gif-img" />
-    </div> -->
     <div v-if="showAnimationModal" class="gif-modal">
       <div class="animation-content">
         <Vue3Lottie
@@ -19,7 +15,7 @@
           :loop="false"
           :autoPlay="true"
         />
-        <p class="thanks-text">오늘도 일용할 양식 감사합니다</p>
+        <p class="message">{{ message }}</p>
       </div>
     </div>
   </div>
@@ -30,30 +26,22 @@ import TransactionInputBar from '@/components/TransactionInputBar.vue';
 import TransactionList from '@/components/TransactionList.vue';
 import { Vue3Lottie } from 'vue3-lottie';
 
-import incomeanimation from '@/assets/Animation - 1744181634184.json';
-
+import incomeanimation from '@/assets/income_animation.json';
+import expenseanimation from '@/assets/expense_animation.json';
 import { ref } from 'vue';
 
-const showGifModal = ref(false);
-const gifSrc = ref('');
 const currentAnimation = ref(null);
 const showAnimationModal = ref(false);
-
-const triggerGif = (type) => {
-  gifSrc.value =
-    type === 'incomeGifShow' ? '/piggyback-7147.gif' : '/money-3408.gif';
-
-  showGifModal.value = true;
-
-  setTimeout(() => {
-    showGifModal.value = false;
-    gifSrc.value = '';
-  }, 2000); // 3초간 보여줌
-};
+const message = ref('');
 
 const triggerAnimation = (type) => {
-  currentAnimation.value =
-    type === 'income' ? incomeanimation : outcomeAnimation;
+  if (type === 'income') {
+    currentAnimation.value = incomeanimation;
+    message.value = '오늘도 일용할 양식 감사합니다';
+  } else {
+    currentAnimation.value = expenseanimation;
+    message.value = '와.. 강제 다이어트 오히려 좋을지도?';
+  }
 
   showAnimationModal.value = true;
 
@@ -90,7 +78,7 @@ const triggerAnimation = (type) => {
   justify-content: center;
 }
 
-.thanks-text {
+.message {
   margin-top: 1rem;
   font-size: 1.2rem;
   font-weight: 600;
