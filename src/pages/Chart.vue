@@ -100,10 +100,17 @@ const drawPieChart = async (type) => {
   if (!pieChartRef.value) return;
 
   const transactions = userTransactions.value;
+  const userNickname = transactions[0].nickname;
+  console.log('nickname : ' + userNickname);
 
   // fetch 카테고리 메타 정보
   const categoryRes = await fetch('http://localhost:3000/categories');
   const categoryMeta = await categoryRes.json();
+
+  // 닉네임으로 필터링된 카테고리만 사용
+  const filteredCategories = categoryMeta.filter(
+    (cat) => cat.nickname === userNickname
+  );
 
   // selectedYear & selectedMonth에 맞는 거래만 필터링
   const filtered = transactions.filter((t) => {
@@ -128,7 +135,8 @@ const drawPieChart = async (type) => {
   const combined = rawLabels
     .map((label, i) => {
       const color =
-        categoryMeta.find((cat) => cat.name === label)?.color || '#cccccc';
+        filteredCategories.find((cat) => cat.name === label)?.color ||
+        '#cccccc';
       const value = rawData[i];
       return {
         label,
