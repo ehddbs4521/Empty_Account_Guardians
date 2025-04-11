@@ -20,10 +20,10 @@
       </div>
 
       <div class="list-wrapper">
-        <div class="fw-bold fs-5" style="margin: 10px auto 10px 20px">
+        <h2>
           {{ selectedMonth }}월 총 <span>{{ selectedType }}</span> 금액
           <span class="fw-bold">{{ total.toLocaleString() }}</span>
-        </div>
+        </h2>
         <table>
           <tbody>
             <tr v-for="(label, index) in labels" :key="label">
@@ -90,40 +90,16 @@ if (!userTransactions) {
   console.warn('userTransactions 주입 실패!');
 }
 
-const updateChart = async (type) => {
-  // transactions 로딩 대기
-  if (!userTransactions.value || userTransactions.value.length === 0) {
-    console.warn('거래 데이터가 아직 로드되지 않았습니다. 대기 중...');
-
-    // wait until loaded
-    const unwatch = watch(
-      () => userTransactions.value,
-      async (val) => {
-        if (val && val.length > 0) {
-          unwatch(); // 한 번만 감시
-          selectedType.value = type;
-          await drawPieChart(type);
-          await drawLineChart(type);
-        }
-      }
-    );
-    return;
-  }
-
+const updateChart = (type) => {
   selectedType.value = type;
-  await drawPieChart(type);
-  await drawLineChart(type);
+  drawPieChart(type);
+  drawLineChart(type);
 };
 
 const drawPieChart = async (type) => {
   if (!pieChartRef.value) return;
 
   const transactions = userTransactions.value;
-  if (!transactions || transactions.length === 0) {
-    console.warn('거래 내역이 비어 있습니다.');
-    return;
-  }
-
   const userNickname = transactions[0].nickname;
   console.log('nickname : ' + userNickname);
 
@@ -208,7 +184,6 @@ const drawPieChart = async (type) => {
   });
 };
 
-// line chart
 const drawLineChart = async (type) => {
   if (!lineChartRef.value) {
     return;
@@ -285,9 +260,8 @@ watch(
 
 onMounted(async () => {
   await nextTick();
-  if (userTransactions.value && userTransactions.value.length > 0) {
-    await updateChart(selectedType.value);
-  }
+
+  await updateChart(selectedType.value);
 });
 </script>
 
@@ -302,7 +276,6 @@ onMounted(async () => {
 }
 .layout-wrapper {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
   gap: 40px;
@@ -312,9 +285,8 @@ onMounted(async () => {
   box-sizing: border-box;
 }
 .pie-chart-wrapper {
-  width: 100%;
-  max-width: 400px;
-  aspect-ratio: 1 / 1;
+  width: 400px;
+  height: 400px;
   flex-shrink: 0;
 }
 

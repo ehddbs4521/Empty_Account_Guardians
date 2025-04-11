@@ -58,7 +58,7 @@
   "categories": [
     {
       "name": "월급",
-      "color": "#ffc0cb",
+      "color": "#ADD8E6",
       "nickname": "포켓보이 중원",
       "id": "42ee",
       "expense_type": "수입"
@@ -79,44 +79,44 @@
     },
     {
       "name": "여가비",
-      "color": "#95ccc1",
+      "color": "#F8E1A1",
       "nickname": "포켓보이 중원",
       "id": "870e",
       "expense_type": "지출"
     },
     {
-      "name": "카페비",
-      "color": "#ffe4e1",
+      "name": "월세",
+      "color": "#FE829B",
       "nickname": "주머니",
       "id": "cd79",
       "expense_type": "지출"
     },
     {
       "name": "통신비",
-      "color": "#d2a3d9",
+      "color": "#FFBDBA",
       "nickname": "주머니",
       "id": "b253",
       "expense_type": "지출"
     },
     {
       "name": "고정지출",
-      "color": "#87e8dc",
+      "color": "#a3dbe4",
       "nickname": "주머니",
       "id": "4cf7",
       "expense_type": "지출"
     },
     {
       "name": "용돈",
-      "color": "#4ade80",
+      "color": "#688dcc",
       "nickname": "주머니",
       "id": "4f57",
       "expense_type": "수입"
     },
     {
       "id": "4931",
-      "name": "패스트푸드",
+      "name": "붕어빵도장깨기",
       "nickname": "주머니",
-      "color": "#a635d0",
+      "color": "#CDCEFF",
       "expense_type": "지출"
     },
     {
@@ -129,28 +129,35 @@
     {
       "id": "47f2",
       "name": "식비",
-      "color": "#ff2424",
+      "color": "#f8b9f3",
       "nickname": "주머니",
       "expense_type": "지출"
     },
     {
       "id": "57c6",
       "name": "월급",
-      "color": "#2efcff",
+      "color": "#cbb9f8",
+      "nickname": "주머니",
+      "expense_type": "수입"
+    },
+    {
+      "id": "57c7",
+      "name": "내일배움카드",
+      "color": "#787aa0",
       "nickname": "주머니",
       "expense_type": "수입"
     },
     {
       "id": "db49",
       "name": "교통비",
-      "color": "#52ff94",
+      "color": "#ace0ba",
       "nickname": "주머니",
       "expense_type": "지출"
     },
     {
       "id": "401b",
       "name": "여가비",
-      "color": "#fbf556",
+      "color": "#f8d4a1",
       "nickname": "주머니",
       "expense_type": "지출"
     },
@@ -180,7 +187,7 @@
       "category": "월급",
       "date": "2025-04-03",
       "description": "돈줘 ㅠㅋㅋㅋㅋ",
-      "amount": 100000000,
+      "amount": 1000000,
       "expense_type": "수입"
     },
     {
@@ -260,7 +267,7 @@
       "category": "여가비",
       "date": "2025-02-26",
       "description": "서점",
-      "amount": 15000,
+      "amount": 55000,
       "expense_type": "지출"
     },
     {
@@ -297,10 +304,10 @@
       "id": "15",
       "nickname": "주머니",
       "paytype": "신한 카드",
-      "category": "카페비",
+      "category": "월세",
       "date": "2025-03-15",
       "description": "카페",
-      "amount": 7000,
+      "amount": 300000,
       "expense_type": "지출"
     },
     {
@@ -310,7 +317,7 @@
       "category": "고정지출",
       "date": "2025-04-10",
       "description": "넷플릭스",
-      "amount": 3000,
+      "amount": 30000,
       "expense_type": "지출"
     },
     {
@@ -320,17 +327,17 @@
       "category": "여가비",
       "date": "2025-04-01",
       "description": "미키17",
-      "amount": 6000,
+      "amount": 13000,
       "expense_type": "지출"
     },
     {
       "id": "18",
       "nickname": "주머니",
       "paytype": "현금",
-      "category": "패스트푸드 ",
+      "category": "붕어빵도장깨기",
       "date": "2025-04-06",
       "description": "햄부기",
-      "amount": 4500,
+      "amount": 20500,
       "expense_type": "지출"
     },
     {
@@ -360,7 +367,7 @@
       "category": "여가비",
       "date": "2025-04-19",
       "description": "PC방",
-      "amount": 6000,
+      "amount": 10000,
       "expense_type": "지출"
     },
     {
@@ -370,7 +377,7 @@
       "category": "식비",
       "date": "2025-04-20",
       "description": "분식",
-      "amount": 4800,
+      "amount": 14800,
       "expense_type": "지출"
     },
     {
@@ -410,7 +417,7 @@
       "category": "고정지출",
       "date": "2025-04-22",
       "description": "병원 진료비",
-      "amount": 15000,
+      "amount": 25000,
       "expense_type": "지출"
     },
     {
@@ -420,7 +427,7 @@
       "category": "여가비",
       "date": "2025-04-16",
       "description": "온라인 쇼핑",
-      "amount": 30000,
+      "amount": 100000,
       "expense_type": "지출"
     },
     {
@@ -560,7 +567,7 @@
       "category": "교통비",
       "date": "2025-04-02",
       "description": "기차",
-      "amount": 12300,
+      "amount": 43000,
       "expense_type": "지출"
     },
     {
@@ -570,17 +577,17 @@
       "category": "교통비",
       "date": "2025-04-07",
       "description": "지하철",
-      "amount": 2600,
+      "amount": 26000,
       "expense_type": "지출"
     },
     {
       "id": "44",
       "nickname": "주머니",
       "paytype": "기업 카드",
-      "category": "패스트푸드",
+      "category": "붕어빵도장깨기",
       "date": "2025-04-02",
       "description": "햄버거 먹음 ㅋ",
-      "amount": 12000,
+      "amount": 22000,
       "expense_type": "지출"
     },
     {
@@ -627,10 +634,10 @@
       "id": "49",
       "nickname": "주머니",
       "paytype": "현금",
-      "category": "카페비",
+      "category": "월세",
       "date": "2025-04-09",
       "description": "ㅎㅎ",
-      "amount": 123456,
+      "amount": 330456,
       "expense_type": "지출"
     },
     {
@@ -676,22 +683,12 @@
     {
       "id": "63",
       "nickname": "주머니",
-      "paytype": "",
+      "paytype": "현금",
       "category": "용돈",
       "date": "2025-02-13",
       "description": "엄마가 용돈 줌",
       "amount": 100000,
       "expense_type": "수입"
-    },
-    {
-      "id": "64",
-      "nickname": "주머니",
-      "paytype": "현금",
-      "category": "카페비",
-      "date": "2025-04-09",
-      "description": "ssss",
-      "amount": 12344,
-      "expense_type": "지출"
     },
     {
       "id": "65",
@@ -712,6 +709,16 @@
       "description": "qwer",
       "amount": 124235,
       "expense_type": "지출"
+    },
+    {
+      "id": "67",
+      "nickname": "주머니",
+      "paytype": "현금",
+      "category": "내일배움카드",
+      "date": "2025-04-015",
+      "description": "교육지원금 개꿀 ~",
+      "amount": 300000,
+      "expense_type": "수입"
     }
   ]
 }
